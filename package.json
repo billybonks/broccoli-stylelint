@@ -1,0 +1,19 @@
+{
+  "name": "broccoli-style-lint",
+  "version": "0.0.1",
+  "description": "Broccoli stylelint plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/billybonks/broccoli-style-lint.git"
+  },
+  "author": "Sebastien Stettler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/billybonks/broccoli-style-lint/issues"
+  },
+  "homepage": "https://github.com/billybonks/broccoli-style-lint#readme"
+}
