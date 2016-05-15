@@ -13,14 +13,21 @@ StyleLinter.prototype.constructor = StyleLinter
  */
 function StyleLinter(inputNodes, options) {
   this.options = options || {};
-  this.linterConfig = options.linterConfig;
   this.setSyntax(options.linterConfig.syntax);
   merge({
     configFile: process.cwd()+'/.stylelintrc.json',
     formatter: 'json',
     syntax: 'scss'
-  },this.linterConfig)
-  delete options.linterConfig;
+  }, options.linterConfig)
+
+  /* Set passed options */
+
+  for (var key in options) {
+    if (options.hasOwnProperty(key)) {
+      this[key] = options[key]
+    }
+  }
+
   Filter.call(this, inputNodes, options);
 }
 

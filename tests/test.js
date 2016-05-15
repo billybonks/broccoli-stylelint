@@ -66,6 +66,14 @@ describe('Configuration', function() {
     })
 
   })
+
+  it('sets options on object', function(){
+    var linterConfig = {syntax:'sass'}
+    var options = {linterConfig:linterConfig, generateTests:true};
+    var linter = new StyleLinter('', options);
+    expect(linter.generateTests).to.equal(true);
+    expect(linter.linterConfig).to.eql(linterConfig);
+  })
 });
 
 
