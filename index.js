@@ -12,6 +12,7 @@ StyleLinter.prototype.constructor = StyleLinter
 function StyleLinter(inputNodes, options) {
   this.options = options || {};
   this.linterConfig = options.linter;
+  this.setSyntax(options.linter.syntax);
   merge({
     configFile: process.cwd()+'/.stylelintrc.json',
     formatter: 'json',
@@ -21,6 +22,31 @@ function StyleLinter(inputNodes, options) {
   Filter.call(this, inputNodes, options);
 }
 
+/**
+ * Sets the, file extensions that the broccoli plugin must parse
+ * @param {string} syntax sass|css|less|sugarss
+ */
+StyleLinter.prototype.setSyntax = function(syntax) {
+  var extensions = [];
+  var targetExtension;
+  if(!syntax)
+    syntax = 'css'
+  if(syntax === 'scss' || syntax === 'sass') {
+    if(syntax == 'scss'){
+      extensions.push('sass')
+    } else {
+      extensions.push('scss')
+    }
+    targetExtension = syntax;
+  } else if(syntax === 'sugarss') {
+    targetExtension = 'sss'
+  } else {
+    targetExtension = syntax
+  }
+  extensions.push(targetExtension);
+  this.extensions = extensions;
+  this.targetExtension = targetExtension;
+}
 
 /** Filter Class Overrides **/
 
