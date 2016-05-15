@@ -80,6 +80,8 @@ StyleLinter.prototype.processString = function(content, relativePath) {
     // do things with err e.g.
     console.error(err.stack);
   });
+  return content;
+};
 };
 
 module.exports = StyleLinter;
