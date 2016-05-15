@@ -5,6 +5,10 @@ var merge = require('merge')
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter
 
+/**
+ * Creates a new StyleLinter instance.
+ * @class
+ */
 function StyleLinter(inputNodes, options) {
   this.options = options || {};
   this.linterConfig = options.linter;
@@ -18,17 +22,22 @@ function StyleLinter(inputNodes, options) {
 }
 
 
+/** Filter Class Overrides **/
+
+/**
+ * Entry point for broccoli build
+ * @override
+ */
 StyleLinter.prototype.build = function() {
   return Filter.prototype.build.call(this).finally(function() {
     console.log('done')
   })
 }
 
-/** Filter Class Overrides **/
-
-StyleLinter.prototype.extensions = ['sass', 'scss'];;
-StyleLinter.prototype.targetExtension = 'scss';
-
+/**
+ * Entry point for broccoli build
+ * @override
+ */
 StyleLinter.prototype.processString = function(content, relativePath) {
   this.linterConfig.code = content;
   return stylelint.lint(this.linterConfig)
