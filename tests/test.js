@@ -29,7 +29,7 @@ describe('Configuration', function() {
   describe('Syntax', function(){
 
     function assertExtensions(syntax, targetExtension, extensions){
-      var options = {linter:{syntax:syntax}};
+      var options = {linterConfig:{syntax:syntax}};
       var linter = new StyleLinter('', options);
       expect(linter.targetExtension).to.equal(targetExtension);
       expect(linter.extensions).to.eql(extensions)
@@ -70,8 +70,8 @@ describe('Configuration', function() {
 
 
 function buildAndLint(sourcePath, options) {
- var options = options || {linter:{syntax:'sass'}};
-  options.linter.formatter = function(fileLint) {
+ var options = options || {linterConfig:{syntax:'sass'}};
+  options.linterConfig.formatter = function(fileLint) {
     errors.push(fileLint)
   };
 

@@ -7,18 +7,20 @@ StyleLinter.prototype.constructor = StyleLinter
 
 /**
  * Creates a new StyleLinter instance.
+ * Options
+ * - linterConfig (StyleLint options)
  * @class
  */
 function StyleLinter(inputNodes, options) {
   this.options = options || {};
-  this.linterConfig = options.linter;
-  this.setSyntax(options.linter.syntax);
+  this.linterConfig = options.linterConfig;
+  this.setSyntax(options.linterConfig.syntax);
   merge({
     configFile: process.cwd()+'/.stylelintrc.json',
     formatter: 'json',
     syntax: 'scss'
   },this.linterConfig)
-  delete options.linter;
+  delete options.linterConfig;
   Filter.call(this, inputNodes, options);
 }
 
