@@ -78,7 +78,7 @@ describe('Configuration', function() {
 
 
 function buildAndLint(sourcePath, options) {
- var options = options || {linterConfig:{syntax:'sass', formatter: 'string'}};
+ var options = options || {disableConsoleLogging:true, linterConfig:{syntax:'sass', formatter: 'string'}};
   options.onError =function(results) {
     lintErrors.push(results)
   };

@@ -19,6 +19,8 @@ function StyleLinter(inputNodes, options) {
   this.setSyntax(options.linterConfig.syntax);
   this.onError = options.onError;
   this.generateTests = options.generateTests;
+  this.disableConsoleLogging = options.disableConsoleLogging;
+
   merge({
     configFile: process.cwd()+'/.stylelintrc.json',
     formatter: 'string',
@@ -85,7 +87,8 @@ StyleLinter.prototype.processString = function(content, relativePath) {
         _this.onError(results)
       if(_this.generateTests)
         _this.testGenerator(relativePath,results.output)
-      console.log(results.output)
+      if(!_this.disableConsoleLogging )
+        console.log(results.output)
     }
   })
   .catch(function(err) {
