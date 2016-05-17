@@ -14,9 +14,10 @@ StyleLinter.prototype.constructor = StyleLinter
 function StyleLinter(inputNodes, options) {
   this.options = options || {};
   this.setSyntax(options.linterConfig.syntax);
+  this.onError = options.onError;
   merge({
     configFile: process.cwd()+'/.stylelintrc.json',
-    formatter: 'json',
+    formatter: 'string',
     syntax: 'scss'
   }, options.linterConfig)
 
@@ -27,7 +28,6 @@ function StyleLinter(inputNodes, options) {
       this[key] = options[key]
     }
   }
-
   Filter.call(this, inputNodes, options);
 }
 
@@ -74,8 +74,15 @@ StyleLinter.prototype.build = function() {
  * @override
  */
 StyleLinter.prototype.processString = function(content, relativePath) {
+  _this = this;
   this.linterConfig.code = content;
-  return stylelint.lint(this.linterConfig)
+  return stylelint.lint(this.linterConfig).then(function(results){
+    if(results.errored){
+      _this.onError(results)
+      errors = results.results[0]
+      console.log(results.output)
+    }
+  })
   .catch(function(err) {
     // do things with err e.g.
     console.error(err.stack);
