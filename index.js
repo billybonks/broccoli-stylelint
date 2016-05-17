@@ -69,7 +69,6 @@ StyleLinter.prototype.setSyntax = function(syntax) {
  */
 StyleLinter.prototype.build = function() {
   return Filter.prototype.build.call(this).finally(function() {
-    console.log('done')
   })
 }
 
