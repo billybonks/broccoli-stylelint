@@ -20,7 +20,7 @@ describe('Broccoli build', function() {
 
   it('catches errors', function() {
     return buildAndLint('tests/fixtures/has-errors').then(function(results) {
-      assert.equal(lintErrors.length,1)
+      assert.equal(lintErrors[0].results[0].warnings.length,2)
     });
   });
 });
