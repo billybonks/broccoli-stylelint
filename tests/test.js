@@ -9,7 +9,7 @@ var expect = chai.expect;
 describe('Broccoli build', function() {
 
   beforeEach(function() {
-    errors = [];
+    lintErrors = [];
   });
 
   afterEach(function() {
@@ -20,7 +20,7 @@ describe('Broccoli build', function() {
 
   it('catches errors', function() {
     return buildAndLint('tests/fixtures/has-errors').then(function(results) {
-      assert.equal(errors.length,1)
+      assert.equal(lintErrors.length,1)
     });
   });
 });
@@ -78,9 +78,9 @@ describe('Configuration', function() {
 
 
 function buildAndLint(sourcePath, options) {
- var options = options || {linterConfig:{syntax:'sass'}};
-  options.linterConfig.formatter = function(fileLint) {
-    errors.push(fileLint)
+ var options = options || {linterConfig:{syntax:'sass', formatter: 'string'}};
+  options.onError =function(results) {
+    lintErrors.push(results)
   };
 
   var tree = new StyleLinter(sourcePath, options);
