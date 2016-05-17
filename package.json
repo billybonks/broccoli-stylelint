@@ -2,6 +2,11 @@
   "name": "broccoli-style-lint",
   "version": "0.0.1",
   "description": "Broccoli stylelint plugin",
+  "keywords": [
+    "broccoli",
+    "broccoli-plugin",
+    "stylelint"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/test"
