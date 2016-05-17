@@ -1,6 +1,9 @@
 var Filter = require('broccoli-filter');
 var stylelint = require('stylelint');
 var merge = require('merge')
+var path       = require('path');
+var fs         = require('fs');
+var escapeErrorString = require('js-string-escape');
 
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter
@@ -15,6 +18,7 @@ function StyleLinter(inputNodes, options) {
   this.options = options || {};
   this.setSyntax(options.linterConfig.syntax);
   this.onError = options.onError;
+  this.generateTests = options.generateTests;
   merge({
     configFile: process.cwd()+'/.stylelintrc.json',
     formatter: 'string',
@@ -78,8 +82,10 @@ StyleLinter.prototype.processString = function(content, relativePath) {
   this.linterConfig.code = content;
   return stylelint.lint(this.linterConfig).then(function(results){
     if(results.errored){
-      _this.onError(results)
-      errors = results.results[0]
+      if(_this.onError)
+        _this.onError(results)
+      if(_this.generateTests)
+        _this.testGenerator(relativePath,results.output)
       console.log(results.output)
     }
   })
@@ -89,6 +95,28 @@ StyleLinter.prototype.processString = function(content, relativePath) {
   });
   return content;
 };
+
+/**
+@method testGenerator
+
+If test generation is enabled this method will generate a qunit test that will
+be included and run by PhantomJS. If there are any errors, the test will fail
+and print the reasons for failing. If there are no errors, the test will pass.
+*/
+
+StyleLinter.prototype.testGenerator = function(relativePath, errors) {
+  var test = "module('Style Lint - " + path.dirname(relativePath) + "');\n" +
+             "test('" + relativePath + " should pass style-lint', function() {\n" +
+             "  ok(" + false + ", '" + relativePath + " should pass style-lint." + escapeErrorString('\n' + errors) + "');\n" +
+             "});\n";
+  var fileName = relativePath.split(path.sep)
+  fileName = fileName[fileName.length - 1]
+  var directory = this.outputPath + path.sep + 'tests';
+  var testPath = directory + path.sep + fileName +'.test.js';
+  if (!fs.existsSync(directory)){
+    fs.mkdirSync(directory);
+  }
+  fs.writeFileSync(testPath, test);
 };
 
 module.exports = StyleLinter;
