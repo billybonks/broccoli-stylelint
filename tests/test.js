@@ -31,7 +31,7 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     it('ignores file specified config');
-
+    it('uses plugins');
   });
 
   describe('Configuration', function() {
@@ -134,9 +134,7 @@ describe('Broccoli StyleLint Plugin', function() {
              ).to.eventually.equal(0);
     });
 
-    it('generates correct qunit test string', function(){
-
-    });
+    it('generates correct qunit test string');
   });
 });
 
