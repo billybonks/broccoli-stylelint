@@ -32,6 +32,7 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     it('ignores file specified config');
+
     it('uses plugins');
   });
 
@@ -135,23 +136,36 @@ describe('Broccoli StyleLint Plugin', function() {
              ).to.eventually.equal(0);
     });
 
-    it('generates correct qunit test string', function(){
-    var testAssertion = "module('Style Lint - .');\n"+
-                        "test('has-errors.scss should pass style-lint', function() {\n"+
-                        "  ok(false, '1:15 Unexpected empty block (block-no-empty)');\n"+
-                        "  ok(false, '6:10 Expected \"#000000\" to be \"black\" (color-named)');\n"+
-                        "});\n";
-    return expect(buildAndLint('tests/fixtures/has-errors', generateTestsConfig)
-                              .then(walkTestsOutputReadableTree)
-                              .then(function(testPaths){
-                                var test = fs.readFileSync(testPaths.basePath+'/'+testPaths.tree[0])
-                                return new String(test).toString()
-                              })
-                 ).to.eventually.equal(testAssertion)
+    it('generates correct failing test string', function(){
+      var testAssertion = "module('Style Lint - .');\n"+
+                          "test('has-errors.scss should pass style-lint', function() {\n"+
+                          "  ok(false, '1:15 Unexpected empty block (block-no-empty)');\n"+
+                          "  ok(false, '6:10 Expected \"#000000\" to be \"black\" (color-named)');\n"+
+                          "});\n";
+      return expect(buildAndLint('tests/fixtures/has-errors', generateTestsConfig)
+                                .then(walkTestsOutputReadableTree)
+                                .then(readTestFile)
+                   ).to.eventually.equal(testAssertion)
+    });
+
+    it('generates correct passing test string', function(){
+      var passedTestAssertion = "module('Style Lint - .');\n"+
+                          "test('no-errors.scss should pass style-lint', function() {\n"+
+                          "  ok(true , no-errors.scss passed style-lint);\n"+
+                          "});\n";
+      generateTestsConfig.testPassedFiles = true;
+      return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)
+                                .then(walkTestsOutputReadableTree)
+                                .then(readTestFile)
+                   ).to.eventually.equal(passedTestAssertion)
     });
   });
 });
 
+function readTestFile(testPaths){
+  var test = fs.readFileSync(testPaths.basePath+'/'+testPaths.tree[0])
+  return new String(test).toString()
+}
 function walkTestsOutputTree(results){
     var outputPath = results.directory;
     results = walkSync(outputPath, ['tests/*.js']);

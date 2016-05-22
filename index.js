@@ -7,14 +7,15 @@ var escapeErrorString = require('js-string-escape');
 
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
-StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'linterConfig', 'disableConsoleLogging'];
+StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'testPassedFiles' ,'linterConfig', 'disableConsoleLogging'];
 
 /**
  * Creates a new StyleLinter instance.
  * Options
  * - linterConfig           (StyleLint options)
  * - onError                (Hook when error occurs)
- * - generateTests          (Hook when error occurs)
+ * - generateTests          (Generate tests for failing file)
+ * - testPassedFiles        (Generate tests for passing file)
  * - disableConsoleLogging  (Disables error logging in console)
  * @class
  */
@@ -97,11 +98,15 @@ StyleLinter.prototype.processString = function(content, relativePath) {
       if(_this.onError)
         _this.onError(results);
       if(_this.generateTests){
-        var testString = _this.testGenerator(relativePath, results.results[0]);
+        var testString = _this.erroredTestGenerator(relativePath, results.results[0]);
         _this.writeTest(relativePath, testString);
       }
       if(!_this.disableConsoleLogging )
         console.log(results.output);
+    }
+    if(_this.testPassedFiles){
+      var testString = _this.passedTestGenerator(relativePath);
+      _this.writeTest(relativePath, testString);
     }
   })
   .catch(function(err) {
@@ -111,13 +116,12 @@ StyleLinter.prototype.processString = function(content, relativePath) {
 };
 
 /**
-@method testGenerator
+@method erroredTestGenerator
 
-If test generation is enabled this method will generate a qunit test that will
-be included and run by PhantomJS. If there are any errors, the test will fail
-and print the reasons for failing. If there are no errors, the test will pass.
+If test generation is enabled this method will generate tests for lints, that
+caused errors
 */
-StyleLinter.prototype.testGenerator = function(relativePath, errors) {
+StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
   var assertions = []
   var module  = "module('Style Lint - " + path.dirname(relativePath) + "');\n";
   var test = "test('" + relativePath + " should pass style-lint', function() {\n"
@@ -127,6 +131,19 @@ StyleLinter.prototype.testGenerator = function(relativePath, errors) {
     assertions.push("  ok(" + false + ", '"+index +" "+ warning.text+"');")
   }
   return module+test+assertions.join('\n')+"\n});\n";
+};
+
+/**
+@method passedTestGenerator
+
+If test generation is enabled this method will generate tests for lints, that
+caused errors
+*/
+StyleLinter.prototype.passedTestGenerator = function(relativePath) {
+  var module  = "module('Style Lint - " + path.dirname(relativePath) + "');\n";
+  var test = "test('" + relativePath + " should pass style-lint', function() {\n"
+  var assertion =  "  ok(true , "+relativePath+" passed style-lint);";
+  return module+test+assertion+"\n});\n";
 };
 
 /**
