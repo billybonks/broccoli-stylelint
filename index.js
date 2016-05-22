@@ -25,6 +25,10 @@ StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'testFaili
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
 
+  if(!options.linterConfig){
+    options.linterConfig = {}
+  }
+  
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
     this[option] = options[option];
