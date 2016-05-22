@@ -1,3 +1,6 @@
+![Build Status](https://travis-ci.org/billybonks/broccoli-style-lint.svg?branch=master)
+![](https://david-dm.org/billybonks/broccoli-style-lint.svg)
+
 Broccoli Style Lint
 =====
 Add style-lint to your build broccoli build pipeline with ease.
