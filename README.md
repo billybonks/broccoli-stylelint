@@ -2,6 +2,8 @@ Broccoli Style Lint
 =====
 Add style-lint to your build broccoli build pipeline with ease.
 
+**Currently doesn't support ignored files configuration**
+
 Installation
 ====
 `npm install --save broccoli-style-lint`
