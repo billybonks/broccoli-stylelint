@@ -3,6 +3,7 @@ var broccoli = require('broccoli');
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 var walkSync = require('walk-sync');
+var fs = require('fs');
 
 chai.use(chaiAsPromised);
 var assert = chai.assert;
@@ -134,7 +135,20 @@ describe('Broccoli StyleLint Plugin', function() {
              ).to.eventually.equal(0);
     });
 
-    it('generates correct qunit test string');
+    it('generates correct qunit test string', function(){
+    var testAssertion = "module('Style Lint - .');\n"+
+                        "test('has-errors.scss should pass style-lint', function() {\n"+
+                        "  ok(false, '1:15 Unexpected empty block (block-no-empty)');\n"+
+                        "  ok(false, '6:10 Expected \"#000000\" to be \"black\" (color-named)');\n"+
+                        "});\n";
+    return expect(buildAndLint('tests/fixtures/has-errors', generateTestsConfig)
+                              .then(walkTestsOutputReadableTree)
+                              .then(function(testPaths){
+                                var test = fs.readFileSync(testPaths.basePath+'/'+testPaths.tree[0])
+                                return new String(test).toString()
+                              })
+                 ).to.eventually.equal(testAssertion)
+    });
   });
 });
 
@@ -142,6 +156,10 @@ function walkTestsOutputTree(results){
     var outputPath = results.directory;
     results = walkSync(outputPath, ['tests/*.js']);
     return results;
+}
+
+function walkTestsOutputReadableTree(results){
+    return {basePath:results.directory, tree:walkTestsOutputTree(results)};
 }
 
 function buildAndLint(sourcePath, options, onError) {

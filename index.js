@@ -91,12 +91,15 @@ StyleLinter.prototype.build = function() {
 StyleLinter.prototype.processString = function(content, relativePath) {
   var _this = this;
   this.linterConfig.code = content;
+  this.linterConfig.fileName = relativePath;
   return stylelint.lint(this.linterConfig).then(function(results){
     if(results.errored){
       if(_this.onError)
         _this.onError(results);
-      if(_this.generateTests)
-        _this.testGenerator(relativePath,results.output);
+      if(_this.generateTests){
+        var testString = _this.testGenerator(relativePath, results.results[0]);
+        _this.writeTest(relativePath, testString);
+      }
       if(!_this.disableConsoleLogging )
         console.log(results.output);
     }
@@ -114,12 +117,24 @@ If test generation is enabled this method will generate a qunit test that will
 be included and run by PhantomJS. If there are any errors, the test will fail
 and print the reasons for failing. If there are no errors, the test will pass.
 */
-
 StyleLinter.prototype.testGenerator = function(relativePath, errors) {
-  var test = "module('Style Lint - " + path.dirname(relativePath) + "');\n" +
-             "test('" + relativePath + " should pass style-lint', function() {\n" +
-             "  ok(" + false + ", '" + relativePath + " should pass style-lint." + escapeErrorString('\n' + errors) + "');\n" +
-             "});\n";
+  var assertions = []
+  var module  = "module('Style Lint - " + path.dirname(relativePath) + "');\n";
+  var test = "test('" + relativePath + " should pass style-lint', function() {\n"
+  for(var i = 0; i < errors.warnings.length; i++){
+    var warning = errors.warnings[i];
+    var index = warning.line+':'+warning.column
+    assertions.push("  ok(" + false + ", '"+index +" "+ warning.text+"');")
+  }
+  return module+test+assertions.join('\n')+"\n});\n";
+};
+
+/**
+@method writeTest
+
+Writes error test to directory test directory
+*/
+StyleLinter.prototype.writeTest = function(relativePath, test) {
   var fileName = relativePath.split(path.sep);
   fileName = fileName[fileName.length - 1];
   var directory = this.outputPath + path.sep + 'tests';
