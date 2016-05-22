@@ -106,12 +106,54 @@ describe('Broccoli StyleLint Plugin', function() {
 
     describe('Tests', function () {
 
-      it('doesnt generateTests when option is false', function() {
-        return expect(buildAndLint('tests/fixtures/test-generation')
+      function generatorOptionsTest(testFileCount, options){
+        return expect(buildAndLint('tests/fixtures/test-generation', options)
                               .then(walkTestsOutputTree)
                               .then(function(result){return result.length;})
-              ).to.eventually.equal(0);
+              ).to.eventually.equal(testFileCount);
+      }
+
+      beforeEach(function() {
+        generateTestsConfig  = {disableConsoleLogging:true, linterConfig:{syntax:'sass', formatter: 'string'}};
       });
+
+      describe('Generate Tests', function(){
+        it('generates all tests regardless of other test config when true', function() {
+          generateTestsConfig.generateTests = true;
+          generatorOptionsTest(3,generateTestsConfig)
+        });
+
+        it('generates no tests regardless of other test config when false', function() {
+          generateTestsConfig.generateTests = false;
+          generatorOptionsTest(3,generateTestsConfig)
+        });
+      })
+
+      describe('Property testPassingFiles', function(){
+        it('only tests passing files when true', function(){
+          generateTestsConfig.testPassingFiles = true;
+          return generatorOptionsTest(1,generateTestsConfig)
+        })
+
+        it('doesnt test passing files when false', function(){
+          generateTestsConfig.testPassingFiles = false;
+          generateTestsConfig.testFailingFiles = true;
+          return generatorOptionsTest(2,generateTestsConfig)
+        })
+      })
+
+      describe('Property testFailingFiles', function(){
+        it('only tests passing files when true', function(){
+          generateTestsConfig.testFailingFiles = true;
+          return generatorOptionsTest(2,generateTestsConfig)
+        })
+
+        it('doesnt test passing files when false', function(){
+          generateTestsConfig.testPassingFiles = true;
+          generateTestsConfig.testFailingFiles = false;
+          return generatorOptionsTest(1,generateTestsConfig)
+        })
+      })
     });
 
   });
@@ -120,20 +162,14 @@ describe('Broccoli StyleLint Plugin', function() {
     var generateTestsConfig;
 
     beforeEach(function() {
-      generateTestsConfig  = {disableConsoleLogging:true, generateTests:true, linterConfig:{syntax:'sass', formatter: 'string'}};
+      generateTestsConfig  = {disableConsoleLogging:true, linterConfig:{syntax:'sass', formatter: 'string'}};
     });
 
     it('correctly handles nested folders', function() {
+      generateTestsConfig.testFailingFiles = true;
       return expect(buildAndLint('tests/fixtures/test-generation', generateTestsConfig)
                               .then(walkTestsOutputTree))
              .to.eventually.eql([ 'tests/has-errors.scss.test.js', 'tests/has-errors2.scss.test.js' ]);
-    });
-
-    it('doesnt generate tests when no there is no error', function() {
-      return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)
-                            .then(walkTestsOutputTree)
-                            .then(function(result){return result.length;})
-             ).to.eventually.equal(0);
     });
 
     it('generates correct failing test string', function(){
@@ -142,6 +178,7 @@ describe('Broccoli StyleLint Plugin', function() {
                           "  ok(false, '1:15 Unexpected empty block (block-no-empty)');\n"+
                           "  ok(false, '6:10 Expected \"#000000\" to be \"black\" (color-named)');\n"+
                           "});\n";
+      generateTestsConfig.testFailingFiles = true;
       return expect(buildAndLint('tests/fixtures/has-errors', generateTestsConfig)
                                 .then(walkTestsOutputReadableTree)
                                 .then(readTestFile)
@@ -153,7 +190,7 @@ describe('Broccoli StyleLint Plugin', function() {
                           "test('no-errors.scss should pass style-lint', function() {\n"+
                           "  ok(true , no-errors.scss passed style-lint);\n"+
                           "});\n";
-      generateTestsConfig.testPassedFiles = true;
+      generateTestsConfig.testPassingFiles = true;
       return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)
                                 .then(walkTestsOutputReadableTree)
                                 .then(readTestFile)

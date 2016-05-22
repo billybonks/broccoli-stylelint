@@ -7,15 +7,16 @@ var escapeErrorString = require('js-string-escape');
 
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
-StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'testPassedFiles' ,'linterConfig', 'disableConsoleLogging'];
+StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'testFailingFiles', 'testPassingFiles' ,'linterConfig', 'disableConsoleLogging'];
 
 /**
  * Creates a new StyleLinter instance.
  * Options
  * - linterConfig           (StyleLint options)
  * - onError                (Hook when error occurs)
- * - generateTests          (Generate tests for failing file)
- * - testPassedFiles        (Generate tests for passing file)
+ * - generateTests          (Generate tests for all files)
+ * - testFailingFiles       (Generate tests for failing files)
+ * - testPassingFiles       (Generate tests for passing files)
  * - disableConsoleLogging  (Disables error logging in console)
  * @class
  */
@@ -38,6 +39,11 @@ function StyleLinter(inputNodes, options) {
 
   if(this.linterConfig.formatter !== 'verbose' || this.linterConfig.formatter !== 'string'){
       this.linterConfig.formatter = 'string';
+  }
+
+  if(this.generateTests === false || this.generateTests === true){
+    this.testFailingFiles = this.generateTests;
+    this.testPassingFiles = this.generateTests;
   }
 
   this.linterConfig.files = null;
@@ -97,16 +103,17 @@ StyleLinter.prototype.processString = function(content, relativePath) {
     if(results.errored){
       if(_this.onError)
         _this.onError(results);
-      if(_this.generateTests){
+      if(_this.testFailingFiles){
         var testString = _this.erroredTestGenerator(relativePath, results.results[0]);
         _this.writeTest(relativePath, testString);
       }
       if(!_this.disableConsoleLogging )
         console.log(results.output);
-    }
-    if(_this.testPassedFiles){
-      var testString = _this.passedTestGenerator(relativePath);
-      _this.writeTest(relativePath, testString);
+    } else {
+      if(_this.testPassingFiles){
+        var testString = _this.passedTestGenerator(relativePath);
+        _this.writeTest(relativePath, testString);
+      }
     }
   })
   .catch(function(err) {
