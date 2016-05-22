@@ -34,10 +34,10 @@ describe('Broccoli StyleLint Plugin', function() {
     it('ignores file specified config');
 
     it('stylelint plugins work', function(){
-      var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}}
+      var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
       return buildAndLint('tests/fixtures/test-plugin', opt).then(function(results){
         assert.equal(lintErrors[0].results[0].warnings.length,1);
-      })
+      });
     });
   });
 
@@ -104,7 +104,8 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     describe('Tests', function () {
-
+      var generateTestsConfig;
+      
       function generatorOptionsTest(testFileCount, options){
         return expect(buildAndLint('tests/fixtures/test-generation', options)
                               .then(walkTestsOutputTree)
@@ -119,40 +120,40 @@ describe('Broccoli StyleLint Plugin', function() {
       describe('Generate Tests', function(){
         it('generates all tests regardless of other test config when true', function() {
           generateTestsConfig.generateTests = true;
-          generatorOptionsTest(3,generateTestsConfig)
+          generatorOptionsTest(3,generateTestsConfig);
         });
 
         it('generates no tests regardless of other test config when false', function() {
           generateTestsConfig.generateTests = false;
-          generatorOptionsTest(3,generateTestsConfig)
+          generatorOptionsTest(3,generateTestsConfig);
         });
-      })
+      });
 
       describe('Property testPassingFiles', function(){
         it('only tests passing files when true', function(){
           generateTestsConfig.testPassingFiles = true;
-          return generatorOptionsTest(1,generateTestsConfig)
-        })
+          return generatorOptionsTest(1,generateTestsConfig);
+        });
 
         it('doesnt test passing files when false', function(){
           generateTestsConfig.testPassingFiles = false;
           generateTestsConfig.testFailingFiles = true;
-          return generatorOptionsTest(2,generateTestsConfig)
-        })
-      })
+          return generatorOptionsTest(2,generateTestsConfig);
+        });
+      });
 
       describe('Property testFailingFiles', function(){
         it('only tests passing files when true', function(){
           generateTestsConfig.testFailingFiles = true;
-          return generatorOptionsTest(2,generateTestsConfig)
-        })
+          return generatorOptionsTest(2,generateTestsConfig);
+        });
 
         it('doesnt test passing files when false', function(){
           generateTestsConfig.testPassingFiles = true;
           generateTestsConfig.testFailingFiles = false;
-          return generatorOptionsTest(1,generateTestsConfig)
-        })
-      })
+          return generatorOptionsTest(1,generateTestsConfig);
+        });
+      });
     });
 
   });
@@ -181,7 +182,7 @@ describe('Broccoli StyleLint Plugin', function() {
       return expect(buildAndLint('tests/fixtures/has-errors', generateTestsConfig)
                                 .then(walkTestsOutputReadableTree)
                                 .then(readTestFile)
-                   ).to.eventually.equal(testAssertion)
+                   ).to.eventually.equal(testAssertion);
     });
 
     it('generates correct passing test string', function(){
@@ -193,14 +194,14 @@ describe('Broccoli StyleLint Plugin', function() {
       return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)
                                 .then(walkTestsOutputReadableTree)
                                 .then(readTestFile)
-                   ).to.eventually.equal(passedTestAssertion)
+                   ).to.eventually.equal(passedTestAssertion);
     });
   });
 });
 
 function readTestFile(testPaths){
-  var test = fs.readFileSync(testPaths.basePath+'/'+testPaths.tree[0])
-  return new String(test).toString()
+  var test = fs.readFileSync(testPaths.basePath+'/'+testPaths.tree[0]);
+  return String(test).toString();
 }
 function walkTestsOutputTree(results){
     var outputPath = results.directory;

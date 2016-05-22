@@ -3,7 +3,6 @@ var stylelint = require('stylelint');
 var merge = require('merge');
 var path       = require('path');
 var fs         = require('fs');
-var escapeErrorString = require('js-string-escape');
 
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
@@ -26,9 +25,9 @@ function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
 
   if(!options.linterConfig){
-    options.linterConfig = {}
+    options.linterConfig = {};
   }
-  
+
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
     this[option] = options[option];
@@ -97,6 +96,7 @@ StyleLinter.prototype.build = function() {
  */
 StyleLinter.prototype.processString = function(content, relativePath) {
   var _this = this;
+  var testString;
   this.linterConfig.code = content;
   this.linterConfig.fileName = relativePath;
   return stylelint.lint(this.linterConfig).then(function(results){
@@ -104,14 +104,14 @@ StyleLinter.prototype.processString = function(content, relativePath) {
       if(_this.onError)
         _this.onError(results);
       if(_this.testFailingFiles){
-        var testString = _this.erroredTestGenerator(relativePath, results.results[0]);
+        testString = _this.erroredTestGenerator(relativePath, results.results[0]);
         _this.writeTest(relativePath, testString);
       }
       if(!_this.disableConsoleLogging )
         console.log(results.output);
     } else {
       if(_this.testPassingFiles){
-        var testString = _this.passedTestGenerator(relativePath);
+        testString = _this.passedTestGenerator(relativePath);
         _this.writeTest(relativePath, testString);
       }
     }
@@ -129,13 +129,13 @@ If test generation is enabled this method will generate tests for lints, that
 caused errors
 */
 StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
-  var assertions = []
+  var assertions = [];
   var module  = "module('Style Lint')";
-  var test = "test('" + relativePath + " should pass style-lint', function() {\n"
+  var test = "test('" + relativePath + " should pass style-lint', function() {\n";
   for(var i = 0; i < errors.warnings.length; i++){
     var warning = errors.warnings[i];
-    var index = warning.line+':'+warning.column
-    assertions.push("  ok(" + false + ", '"+index +" "+ warning.text+"');")
+    var index = warning.line+':'+warning.column;
+    assertions.push("  ok(" + false + ", '"+index +" "+ warning.text+"');");
   }
   return module+test+assertions.join('\n')+"\n});\n";
 };
@@ -148,7 +148,7 @@ caused errors
 */
 StyleLinter.prototype.passedTestGenerator = function(relativePath) {
   var module  = "module('Style Lint')";
-  var test = "test('" + relativePath + " should pass style-lint', function() {\n"
+  var test = "test('" + relativePath + " should pass style-lint', function() {\n";
   var assertion =  "  ok(true , "+relativePath+" passed style-lint);";
   return module+test+assertion+"\n});\n";
 };
