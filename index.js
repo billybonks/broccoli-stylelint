@@ -37,10 +37,6 @@ function StyleLinter(inputNodes, options) {
     formatter: 'string'
   }, this.linterConfig);
 
-  if(this.linterConfig.formatter !== 'verbose' || this.linterConfig.formatter !== 'string'){
-      this.linterConfig.formatter = 'string';
-  }
-
   if(this.generateTests === false || this.generateTests === true){
     this.testFailingFiles = this.generateTests;
     this.testPassingFiles = this.generateTests;

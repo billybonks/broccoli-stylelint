@@ -86,12 +86,6 @@ describe('Broccoli StyleLint Plugin', function() {
 
     describe('StyleLint Configuration', function(){
 
-      it('cant override formatter', function(){
-        var options = {linterConfig:{formatter:'verbose'}};
-        var tree = new StyleLinter('', options);
-        assert.equal(tree.linterConfig.formatter, 'string');
-      });
-
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
         var tree = new StyleLinter('', options);
