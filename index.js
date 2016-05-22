@@ -126,7 +126,7 @@ caused errors
 */
 StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
   var assertions = []
-  var module  = "module('Style Lint - " + path.dirname(relativePath) + "');\n";
+  var module  = "module('Style Lint')";
   var test = "test('" + relativePath + " should pass style-lint', function() {\n"
   for(var i = 0; i < errors.warnings.length; i++){
     var warning = errors.warnings[i];
@@ -143,7 +143,7 @@ If test generation is enabled this method will generate tests for lints, that
 caused errors
 */
 StyleLinter.prototype.passedTestGenerator = function(relativePath) {
-  var module  = "module('Style Lint - " + path.dirname(relativePath) + "');\n";
+  var module  = "module('Style Lint')";
   var test = "test('" + relativePath + " should pass style-lint', function() {\n"
   var assertion =  "  ok(true , "+relativePath+" passed style-lint);";
   return module+test+assertion+"\n});\n";
