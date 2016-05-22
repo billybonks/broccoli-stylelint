@@ -24,9 +24,10 @@
   "devDependencies": {
     "broccoli": "^0.16.9",
     "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
     "mocha": "^2.4.5",
-    "walk-sync": "^0.2.6",
-    "chai-as-promised": "^5.3.0"
+    "stylelint-selector-bem-pattern": "^1.0.0",
+    "walk-sync": "^0.2.6"
   },
   "dependencies": {
     "broccoli-filter": "^1.2.3",

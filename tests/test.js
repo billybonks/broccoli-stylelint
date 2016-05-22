@@ -33,7 +33,12 @@ describe('Broccoli StyleLint Plugin', function() {
 
     it('ignores file specified config');
 
-    it('uses plugins');
+    it('stylelint plugins work', function(){
+      var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}}
+      return buildAndLint('tests/fixtures/test-plugin', opt).then(function(results){
+        assert.equal(lintErrors[0].results[0].warnings.length,1);
+      })
+    });
   });
 
   describe('Configuration', function() {
