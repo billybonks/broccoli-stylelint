@@ -158,7 +158,7 @@ StyleLinter.prototype.writeTest = function(relativePath, test) {
   var fileName = relativePath.split(path.sep);
   fileName = fileName[fileName.length - 1];
   var directory = this.outputPath + path.sep + 'tests';
-  var testPath = directory + path.sep + fileName +'.test.js';
+  var testPath = directory + path.sep + fileName +'.stylelint-test.js';
   if (!fs.existsSync(directory)){
     fs.mkdirSync(directory);
   }

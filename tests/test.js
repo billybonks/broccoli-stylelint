@@ -168,7 +168,7 @@ describe('Broccoli StyleLint Plugin', function() {
       generateTestsConfig.testFailingFiles = true;
       return expect(buildAndLint('tests/fixtures/test-generation', generateTestsConfig)
                               .then(walkTestsOutputTree))
-             .to.eventually.eql([ 'tests/has-errors.scss.test.js', 'tests/has-errors2.scss.test.js' ]);
+             .to.eventually.eql([ 'tests/has-errors.scss.stylelint-test.js', 'tests/has-errors2.scss.stylelint-test.js' ]);
     });
 
     it('generates correct failing test string', function(){
