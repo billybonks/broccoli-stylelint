@@ -3,7 +3,7 @@
 
 Broccoli Style Lint
 =====
-Add style-lint to your build broccoli build pipeline with ease.
+Add style-lint to your broccoli build pipeline with ease.
 
 **Currently doesn't support ignored files configuration**
 
