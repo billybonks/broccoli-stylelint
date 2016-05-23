@@ -34,11 +34,9 @@ function StyleLinter(inputNodes, options) {
     delete options[option];
   }
 
-  merge({
-    configFile: '/.stylelintrc',
-    syntax: 'scss',
+  merge(this.linterConfig, {
     formatter: 'string'
-  }, this.linterConfig);
+  });
 
   if(this.generateTests === false || this.generateTests === true){
     this.testFailingFiles = this.generateTests;

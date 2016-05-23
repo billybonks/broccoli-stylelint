@@ -43,6 +43,15 @@ describe('Broccoli StyleLint Plugin', function() {
 
   describe('Configuration', function() {
 
+    describe('Formatter', function(){
+
+      it('uses string formatter by default', function(){
+        var tree = new StyleLinter('', {});
+        expect(tree.linterConfig.formatter).to.eql('string');
+      });
+
+    });
+
     describe('Syntax', function(){
 
       function assertExtensions(syntax, targetExtension, extensions){
