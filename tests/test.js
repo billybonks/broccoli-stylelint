@@ -197,7 +197,7 @@ describe('Broccoli StyleLint Plugin', function() {
     it('generates correct passing test string', function(){
       var passedTestAssertion = "module('Style Lint');\n"+
                           "test('no-errors.scss should pass style-lint', function() {\n"+
-                          "  ok(true , no-errors.scss passed style-lint);\n"+
+                          "  ok(\'true , no-errors.scss passed style-lint\');\n"+
                           "});\n";
       generateTestsConfig.testPassingFiles = true;
       return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)

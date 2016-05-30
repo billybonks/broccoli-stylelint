@@ -147,7 +147,7 @@ caused errors
 StyleLinter.prototype.passedTestGenerator = function(relativePath) {
   var module  = "module('Style Lint');\n";
   var test = "test('" + relativePath + " should pass style-lint', function() {\n";
-  var assertion =  "  ok(true , "+relativePath+" passed style-lint);";
+  var assertion =  "  ok(\'true , "+relativePath+" passed style-lint\');";
   return module+test+assertion+"\n});\n";
 };
 
