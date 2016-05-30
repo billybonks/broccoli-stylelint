@@ -92,33 +92,35 @@ StyleLinter.prototype.build = function() {
  * Entry point for broccoli build
  * @override
  */
-StyleLinter.prototype.processString = function(content, relativePath) {
-  var _this = this;
-  var testString;
-  this.linterConfig.code = content;
-  this.linterConfig.fileName = relativePath;
-  return stylelint.lint(this.linterConfig).then(function(results){
-    if(results.errored){
-      if(_this.onError)
-        _this.onError(results);
-      if(_this.testFailingFiles){
-        testString = _this.erroredTestGenerator(relativePath, results.results[0]);
-        _this.writeTest(relativePath, testString);
-      }
-      if(!_this.disableConsoleLogging )
-        console.log(results.output);
-    } else {
-      if(_this.testPassingFiles){
-        testString = _this.passedTestGenerator(relativePath);
-        _this.writeTest(relativePath, testString);
-      }
-    }
-  })
-  .catch(function(err) {
-    // do things with err e.g.
-    console.error(err.stack);
-  });
-};
+ StyleLinter.prototype.processString = function(content, relativePath) {
+   var _this = this;
+   var testString;
+   this.linterConfig.code = content;
+   this.linterConfig.codeFilename = relativePath;
+   return stylelint.lint(this.linterConfig).then(function(results){
+      //sets the value to relative path otherwise it would be absolute path
+     results.results[0].source = relativePath;
+     if(results.errored){
+       if(_this.onError)
+         _this.onError(results.results[0]);
+       if(_this.testFailingFiles){
+         testString = _this.erroredTestGenerator(relativePath, results.results[0]);
+         _this.writeTest(relativePath, testString);
+       }
+       if(!_this.disableConsoleLogging )
+         console.log(results.output);
+     } else {
+       if(_this.testPassingFiles){
+         testString = _this.passedTestGenerator(relativePath);
+         _this.writeTest(relativePath, testString);
+       }
+     }
+   })
+   .catch(function(err) {
+     // do things with err e.g.
+     console.error(err.stack);
+   });
+ };
 
 /**
 @method erroredTestGenerator

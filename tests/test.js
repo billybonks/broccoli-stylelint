@@ -27,7 +27,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
     it('catches errors', function() {
       return buildAndLint('tests/fixtures/has-errors').then(function(results) {
-        assert.equal(lintErrors[0].results[0].warnings.length,2);
+        assert.equal(lintErrors[0].warnings.length,2);
       });
     });
 
@@ -36,7 +36,14 @@ describe('Broccoli StyleLint Plugin', function() {
     it('stylelint plugins work', function(){
       var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
       return buildAndLint('tests/fixtures/test-plugin', opt).then(function(results){
-        assert.equal(lintErrors[0].results[0].warnings.length,1);
+        assert.equal(lintErrors[0].warnings.length,1);
+      });
+    });
+
+    it('returns usefull source name onError', function(){
+      var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
+      return buildAndLint('tests/fixtures/test-plugin', opt).then(function(results){
+        assert.equal(lintErrors[0].source,'has-error.scss');
       });
     });
   });
