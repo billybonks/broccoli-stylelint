@@ -15,7 +15,11 @@
     "type": "git",
     "url": "git+https://github.com/billybonks/broccoli-style-lint.git"
   },
-  "author": "Sebastien Stettler",
+  "author": {
+    "name": "billybonks",
+    "email": "sebastienstettler@gmail.com",
+    "website": "www.unearthing.io"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/billybonks/broccoli-style-lint/issues"
