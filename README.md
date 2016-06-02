@@ -1,15 +1,16 @@
 ![Build Status](https://travis-ci.org/billybonks/broccoli-style-lint.svg?branch=master)
 ![](https://david-dm.org/billybonks/broccoli-style-lint.svg)
+![downloads](https://img.shields.io/npm/dm/ember-cli-style-lint.svg)
 
 Broccoli Style Lint
 =====
-Add style-lint to your broccoli build pipeline with ease.
+Add [stylelint](http://stylelint.io/) to your broccoli build pipeline with ease.
 
 **Currently doesn't support ignored files configuration**
 
 Installation
 ====
-`npm install --save broccoli-style-lint`
+`npm install --save-dev broccoli-style-lint`
 
 Usage
 =====
@@ -40,6 +41,17 @@ the resulting tree structure will look like this
     ├── scssfile2.tests.js (was nested in directory)
 ```
 
+```javascript
+var StyleLinter = require('broccoli-style-lint');
+var Funnel =      require('broccoli-funnel');
+// path to files that need linting
+var node = new StyleLinter('app/styles');
+
+// to extract tests from linter output
+new Funnel(node, {
+  srcDir:'tests',
+});
+```
 See below for more advaned test configurations
 
 Configuration
