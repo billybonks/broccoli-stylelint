@@ -3,6 +3,7 @@ var stylelint = require('stylelint');
 var merge = require('merge');
 var path       = require('path');
 var fs         = require('fs');
+var escapeString = require('js-string-escape');
 
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
@@ -135,7 +136,7 @@ StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
   for(var i = 0; i < errors.warnings.length; i++){
     var warning = errors.warnings[i];
     var index = warning.line+':'+warning.column;
-    assertions.push("  ok(" + false + ", '"+index +" "+ warning.text+"');");
+    assertions.push("  ok(" + false + ", '"+index +" "+escapeString(warning.text)+"');");
   }
   return module+test+assertions.join('\n')+"\n});\n";
 };
