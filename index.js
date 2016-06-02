@@ -1,13 +1,21 @@
-var Filter = require('broccoli-filter');
-var stylelint = require('stylelint');
-var merge = require('merge');
-var path       = require('path');
-var fs         = require('fs');
-var escapeString = require('js-string-escape');
+var Filter =        require('broccoli-filter');
+var escapeString =  require('js-string-escape');
+var stylelint =     require('stylelint');
+var merge =         require('merge');
+var path =          require('path');
+var fs =            require('fs');
 
+/* Setup class */
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
-StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'testFailingFiles', 'testPassingFiles' ,'linterConfig', 'disableConsoleLogging'];
+
+/* Used to extract and delete options from input hash */
+StyleLinter.prototype.availableOptions = ['onError',
+                                          'generateTests',
+                                          'testFailingFiles',
+                                          'testPassingFiles' ,
+                                          'linterConfig',
+                                          'disableConsoleLogging'];
 
 /**
  * Creates a new StyleLinter instance.
@@ -20,8 +28,6 @@ StyleLinter.prototype.availableOptions = ['onError', 'generateTests', 'testFaili
  * - disableConsoleLogging  (Disables error logging in console)
  * @class
  */
-
- //test config file
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
 
@@ -90,7 +96,10 @@ StyleLinter.prototype.build = function() {
 };
 
 /**
- * Entry point for broccoli build
+ * This method is executed for every scss file, it:
+ *  - Calls onError
+ *  - Logs to console
+ *  - Generate tests
  * @override
  */
  StyleLinter.prototype.processString = function(content, relativePath) {
@@ -123,12 +132,11 @@ StyleLinter.prototype.build = function() {
    });
  };
 
-/**
-@method erroredTestGenerator
-
-If test generation is enabled this method will generate tests for lints, that
-caused errors
-*/
+ /**
+  * @method passedTestGenerator
+  *
+  *  Geneartes tests for passing lints
+  */
 StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
   var assertions = [];
   var module  = "module('Style Lint');\n";
@@ -142,11 +150,10 @@ StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
 };
 
 /**
-@method passedTestGenerator
-
-If test generation is enabled this method will generate tests for lints, that
-caused errors
-*/
+ * @method passedTestGenerator
+ *
+ *  Geneartes tests for passing lints
+ */
 StyleLinter.prototype.passedTestGenerator = function(relativePath) {
   var module  = "module('Style Lint');\n";
   var test = "test('" + relativePath + " should pass style-lint', function() {\n";
@@ -155,10 +162,10 @@ StyleLinter.prototype.passedTestGenerator = function(relativePath) {
 };
 
 /**
-@method writeTest
-
-Writes error test to directory test directory
-*/
+ * @method writeTest
+ *
+ * Writes error test to directory test directory
+ */
 StyleLinter.prototype.writeTest = function(relativePath, test) {
   var fileName = relativePath.split(path.sep);
   fileName = fileName[fileName.length - 1];

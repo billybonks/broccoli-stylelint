@@ -1,9 +1,9 @@
-var StyleLinter = require('..');
-var broccoli = require('broccoli');
-var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
-var walkSync = require('walk-sync');
-var fs = require('fs');
+var StyleLinter =    require('..');
+var walkSync =       require('walk-sync');
+var broccoli =       require('broccoli');
+var chai =           require('chai');
+var fs =             require('fs');
 
 chai.use(chaiAsPromised);
 var assert = chai.assert;
