@@ -59,7 +59,7 @@ Configuration
 
 `linterConfig` {Object}
 
-Hash as specified by [style-lint](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/node-api.md)
+Hash as specified by [stylelint](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/node-api.md)
 
 doesn't accept `files` option
 

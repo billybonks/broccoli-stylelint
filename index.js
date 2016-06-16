@@ -140,7 +140,7 @@ StyleLinter.prototype.build = function() {
 StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
   var assertions = [];
   var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass style-lint', function() {\n";
+  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
   for(var i = 0; i < errors.warnings.length; i++){
     var warning = errors.warnings[i];
     var index = warning.line+':'+warning.column;
@@ -156,8 +156,8 @@ StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
  */
 StyleLinter.prototype.passedTestGenerator = function(relativePath) {
   var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass style-lint', function() {\n";
-  var assertion =  "  ok(\'true , "+relativePath+" passed style-lint\');";
+  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
+  var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
   return module+test+assertion+"\n});\n";
 };
 
