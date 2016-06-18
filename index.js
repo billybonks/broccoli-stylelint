@@ -80,6 +80,8 @@ StyleLinter.prototype.setSyntax = function(syntax) {
     targetExtension = syntax;
   }
   extensions.push(targetExtension);
+  if(this.testPassingFiles || this.testFailingFiles)
+    targetExtension = 'stylelint-test.js';
   this.extensions = extensions;
   this.targetExtension = targetExtension;
 };
@@ -104,7 +106,6 @@ StyleLinter.prototype.build = function() {
  */
  StyleLinter.prototype.processString = function(content, relativePath) {
    var _this = this;
-   var testString;
    this.linterConfig.code = content;
    this.linterConfig.codeFilename = relativePath;
    return stylelint.lint(this.linterConfig).then(function(results){
@@ -114,17 +115,20 @@ StyleLinter.prototype.build = function() {
        if(_this.onError)
          _this.onError(results.results[0]);
        if(_this.testFailingFiles){
-         testString = _this.erroredTestGenerator(relativePath, results.results[0]);
-         _this.writeTest(relativePath, testString);
+         return _this.erroredTestGenerator(relativePath, results.results[0]);
+       } else {
+         return '';
        }
        if(!_this.disableConsoleLogging )
          console.log(results.output);
      } else {
        if(_this.testPassingFiles){
-         testString = _this.passedTestGenerator(relativePath);
-         _this.writeTest(relativePath, testString);
+         return _this.passedTestGenerator(relativePath);
+       }else {
+         return '';
        }
      }
+
    })
    .catch(function(err) {
      // do things with err e.g.
