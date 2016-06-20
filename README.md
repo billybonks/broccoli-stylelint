@@ -18,34 +18,41 @@ Usage
 ###Basic
 
 ```javascript
-var StyleLinter = require('broccoli-style-lint');
+var StyleLint = require('broccoli-style-lint');
 
 // path to files that need linting
-var node = new StyleLinter('app/styles');
+var node = new StyleLint('app/styles');
 ```
 
 the default output will be the same SCSS files, in the same tree structure.
 
 ###Generating Tests
 
-`var node = new StyleLinter('app/styles', {generateTests:true});`
+`var node = new StyleLint('app/styles', {generateTests:true});`
 
-setting this option will generate qunit tests for the SCSS files.
-the resulting tree structure will look like this
+Instead of receiving a tree of scss files, the plugin will output a tree of test files
 
+**original tree**
 ```
 .
-├── scss files in same directory structure
-└── tests/
-    ├── scssfile1.tests.js
-    ├── scssfile2.tests.js (was nested in directory)
+├── scssfile1.sscss
+└── nested-dir/
+    ├── scssfile2.scss
+```
+
+**output tree**
+```
+.
+├── scssfile1.stylelint-test.js
+└── nested-dir/
+    ├── scssfile2.stylelint-test.js
 ```
 
 ```javascript
-var StyleLinter = require('broccoli-style-lint');
+var StyleLint = require('broccoli-style-lint');
 var Funnel =      require('broccoli-funnel');
 // path to files that need linting
-var node = new StyleLinter('app/styles');
+var node = new StyleLint('app/styles');
 
 // to extract tests from linter output
 new Funnel(node, {
