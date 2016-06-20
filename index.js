@@ -2,8 +2,6 @@ var Filter =        require('broccoli-filter');
 var escapeString =  require('js-string-escape');
 var stylelint =     require('stylelint');
 var merge =         require('merge');
-var path =          require('path');
-var fs =            require('fs');
 
 /* Setup class */
 StyleLinter.prototype = Object.create(Filter.prototype);
@@ -80,6 +78,8 @@ StyleLinter.prototype.setSyntax = function(syntax) {
     targetExtension = syntax;
   }
   extensions.push(targetExtension);
+  if(this.testPassingFiles || this.testFailingFiles)
+    targetExtension = 'stylelint-test.js';
   this.extensions = extensions;
   this.targetExtension = targetExtension;
 };
@@ -104,7 +104,6 @@ StyleLinter.prototype.build = function() {
  */
  StyleLinter.prototype.processString = function(content, relativePath) {
    var _this = this;
-   var testString;
    this.linterConfig.code = content;
    this.linterConfig.codeFilename = relativePath;
    return stylelint.lint(this.linterConfig).then(function(results){
@@ -114,17 +113,20 @@ StyleLinter.prototype.build = function() {
        if(_this.onError)
          _this.onError(results.results[0]);
        if(_this.testFailingFiles){
-         testString = _this.erroredTestGenerator(relativePath, results.results[0]);
-         _this.writeTest(relativePath, testString);
+         return _this.erroredTestGenerator(relativePath, results.results[0]);
+       } else {
+         return '';
        }
        if(!_this.disableConsoleLogging )
          console.log(results.output);
      } else {
        if(_this.testPassingFiles){
-         testString = _this.passedTestGenerator(relativePath);
-         _this.writeTest(relativePath, testString);
+         return _this.passedTestGenerator(relativePath);
+       }else {
+         return '';
        }
      }
+
    })
    .catch(function(err) {
      // do things with err e.g.
@@ -140,7 +142,7 @@ StyleLinter.prototype.build = function() {
 StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
   var assertions = [];
   var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass style-lint', function() {\n";
+  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
   for(var i = 0; i < errors.warnings.length; i++){
     var warning = errors.warnings[i];
     var index = warning.line+':'+warning.column;
@@ -156,25 +158,9 @@ StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
  */
 StyleLinter.prototype.passedTestGenerator = function(relativePath) {
   var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass style-lint', function() {\n";
-  var assertion =  "  ok(\'true , "+relativePath+" passed style-lint\');";
+  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
+  var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
   return module+test+assertion+"\n});\n";
-};
-
-/**
- * @method writeTest
- *
- * Writes error test to directory test directory
- */
-StyleLinter.prototype.writeTest = function(relativePath, test) {
-  var fileName = relativePath.split(path.sep);
-  fileName = fileName[fileName.length - 1];
-  var directory = this.outputPath + path.sep + 'tests';
-  var testPath = directory + path.sep + fileName +'.stylelint-test.js';
-  if (!fs.existsSync(directory)){
-    fs.mkdirSync(directory);
-  }
-  fs.writeFileSync(testPath, test);
 };
 
 module.exports = StyleLinter;

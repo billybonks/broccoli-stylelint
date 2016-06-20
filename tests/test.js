@@ -64,7 +64,6 @@ describe('Broccoli StyleLint Plugin', function() {
       function assertExtensions(syntax, targetExtension, extensions){
         var options = {linterConfig:{syntax:syntax}};
         builder = new StyleLinter('', options);
-        expect(builder.targetExtension).to.equal(targetExtension);
         expect(builder.extensions).to.eql(extensions);
       }
 
@@ -144,34 +143,39 @@ describe('Broccoli StyleLint Plugin', function() {
           generatorOptionsTest(3,generateTestsConfig);
         });
       });
+      function buildAndAssertFile(options, relativePath, equal) {
+        var assertion = expect(buildAndLint('tests/fixtures/test-generation', options)
+                .then(function(results) {
+                  var path = results.directory+'/'+relativePath;
+                  return fs.readFileSync(path).toString();
+                })).to.eventually;
+        return equal ? assertion.equal('') : assertion.not.equal('');
+      }
 
       describe('Property testPassingFiles', function(){
-        it('only tests passing files when true', function(){
-          generateTestsConfig.testPassingFiles = true;
-          return generatorOptionsTest(1,generateTestsConfig);
-        });
+       it('doesnt generate tests for failing files', function(){
+         generateTestsConfig.testPassingFiles = true;
+         return buildAndAssertFile(generateTestsConfig, 'nested-dir/has-errors2.stylelint-test.js', true);
+       });
 
-        it('doesnt test passing files when false', function(){
-          generateTestsConfig.testPassingFiles = false;
-          generateTestsConfig.testFailingFiles = true;
-          return generatorOptionsTest(2,generateTestsConfig);
-        });
+       it('generates files for passing files', function(){
+         generateTestsConfig.testPassingFiles = true;
+         return buildAndAssertFile(generateTestsConfig, 'nested-dir/no-errors.stylelint-test.js', false);
+       });
       });
 
       describe('Property testFailingFiles', function(){
-        it('only tests passing files when true', function(){
-          generateTestsConfig.testFailingFiles = true;
-          return generatorOptionsTest(2,generateTestsConfig);
-        });
+       it('doesnt generate tests for failing files', function(){
+         generateTestsConfig.testFailingFiles = true;
+         return buildAndAssertFile(generateTestsConfig, 'nested-dir/has-errors2.stylelint-test.js', false);
+       });
 
-        it('doesnt test passing files when false', function(){
-          generateTestsConfig.testPassingFiles = true;
-          generateTestsConfig.testFailingFiles = false;
-          return generatorOptionsTest(1,generateTestsConfig);
-        });
+       it('generates files for passing files', function(){
+         generateTestsConfig.testFailingFiles = true;
+         return buildAndAssertFile(generateTestsConfig, 'nested-dir/no-errors.stylelint-test.js', true);
+       });
       });
     });
-
   });
 
   describe('Generated Tests', function(){
@@ -185,12 +189,14 @@ describe('Broccoli StyleLint Plugin', function() {
       generateTestsConfig.testFailingFiles = true;
       return expect(buildAndLint('tests/fixtures/test-generation', generateTestsConfig)
                               .then(walkTestsOutputTree))
-             .to.eventually.eql([ 'tests/has-errors.scss.stylelint-test.js', 'tests/has-errors2.scss.stylelint-test.js' ]);
+                              .to.eventually.eql([ 'has-errors.stylelint-test.js',
+                                                   'nested-dir/has-errors2.stylelint-test.js',
+                                                   'nested-dir/no-errors.stylelint-test.js' ]);
     });
 
     it('generates correct failing test string', function(){
       var testAssertion = "module('Style Lint');\n"+
-                          "test('has-errors.scss should pass style-lint', function() {\n"+
+                          "test('has-errors.scss should pass stylelint', function() {\n"+
                           "  ok(false, '1:15 Unexpected empty block (block-no-empty)');\n"+
                           "  ok(false, '6:10 Expected \\\"#000000\\\" to be \\\"black\\\" (color-named)');\n"+
                           "});\n";
@@ -203,8 +209,8 @@ describe('Broccoli StyleLint Plugin', function() {
 
     it('generates correct passing test string', function(){
       var passedTestAssertion = "module('Style Lint');\n"+
-                          "test('no-errors.scss should pass style-lint', function() {\n"+
-                          "  ok(\'true , no-errors.scss passed style-lint\');\n"+
+                          "test('no-errors.scss should pass stylelint', function() {\n"+
+                          "  ok(\'true , no-errors.scss passed stylelint\');\n"+
                           "});\n";
       generateTestsConfig.testPassingFiles = true;
       return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)
@@ -221,7 +227,7 @@ function readTestFile(testPaths){
 }
 function walkTestsOutputTree(results){
     var outputPath = results.directory;
-    results = walkSync(outputPath, ['tests/*.js']);
+    results = walkSync(outputPath, ['**/*.js']);
     return results;
 }
 
