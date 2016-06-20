@@ -2,8 +2,6 @@ var Filter =        require('broccoli-filter');
 var escapeString =  require('js-string-escape');
 var stylelint =     require('stylelint');
 var merge =         require('merge');
-var path =          require('path');
-var fs =            require('fs');
 
 /* Setup class */
 StyleLinter.prototype = Object.create(Filter.prototype);
@@ -163,22 +161,6 @@ StyleLinter.prototype.passedTestGenerator = function(relativePath) {
   var test = "test('" + relativePath + " should pass stylelint', function() {\n";
   var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
   return module+test+assertion+"\n});\n";
-};
-
-/**
- * @method writeTest
- *
- * Writes error test to directory test directory
- */
-StyleLinter.prototype.writeTest = function(relativePath, test) {
-  var fileName = relativePath.split(path.sep);
-  fileName = fileName[fileName.length - 1];
-  var directory = this.outputPath + path.sep + 'tests';
-  var testPath = directory + path.sep + fileName +'.stylelint-test.js';
-  if (!fs.existsSync(directory)){
-    fs.mkdirSync(directory);
-  }
-  fs.writeFileSync(testPath, test);
 };
 
 module.exports = StyleLinter;
