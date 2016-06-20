@@ -1,6 +1,6 @@
-![Build Status](https://travis-ci.org/billybonks/broccoli-style-lint.svg?branch=master)
-![](https://david-dm.org/billybonks/broccoli-style-lint.svg)
-![downloads](https://img.shields.io/npm/dm/ember-cli-style-lint.svg)
+![Build Status](https://travis-ci.org/billybonks/broccoli-stylelint.svg?branch=master)
+![](https://david-dm.org/billybonks/broccoli-stylelint.svg)
+![downloads](https://img.shields.io/npm/dm/ember-cli-stylelint.svg)
 
 Broccoli Style Lint
 =====
@@ -10,7 +10,7 @@ Add [stylelint](http://stylelint.io/) to your broccoli build pipeline with ease.
 
 Installation
 ====
-`npm install --save-dev broccoli-style-lint`
+`npm install --save-dev broccoli-stylelint`
 
 Usage
 =====
@@ -18,7 +18,7 @@ Usage
 ###Basic
 
 ```javascript
-var StyleLint = require('broccoli-style-lint');
+var StyleLint = require('broccoli-stylelint');
 
 // path to files that need linting
 var node = new StyleLint('app/styles');
@@ -49,7 +49,7 @@ Instead of receiving a tree of scss files, the plugin will output a tree of test
 ```
 
 ```javascript
-var StyleLint = require('broccoli-style-lint');
+var StyleLint = require('broccoli-stylelint');
 var Funnel =      require('broccoli-funnel');
 // path to files that need linting
 var node = new StyleLint('app/styles');

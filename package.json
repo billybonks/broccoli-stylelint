@@ -1,5 +1,5 @@
 {
-  "name": "broccoli-style-lint",
+  "name": "broccoli-stylelint",
   "version": "0.3.0",
   "description": "Broccoli stylelint plugin",
   "keywords": [
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/billybonks/broccoli-style-lint.git"
+    "url": "git+https://github.com/billybonks/broccoli-stylelint.git"
   },
   "author": {
     "name": "billybonks",
@@ -22,9 +22,9 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/billybonks/broccoli-style-lint/issues"
+    "url": "https://github.com/billybonks/broccoli-stylelint/issues"
   },
-  "homepage": "https://github.com/billybonks/broccoli-style-lint#readme",
+  "homepage": "https://github.com/billybonks/broccoli-stylelint#readme",
   "devDependencies": {
     "broccoli": "^0.16.9",
     "chai": "^3.5.0",
