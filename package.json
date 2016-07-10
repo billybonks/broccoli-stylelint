@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "broccoli-filter": "^1.2.3",
-    "broccoli-persistent-filter": "^1.2.0",
     "js-string-escape": "^1.0.1",
     "merge": "^1.2.0",
     "stylelint": "^6.3.3"
