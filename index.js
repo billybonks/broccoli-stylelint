@@ -12,6 +12,7 @@ StyleLinter.prototype.availableOptions = ['onError',
                                           'generateTests',
                                           'testFailingFiles',
                                           'testPassingFiles' ,
+                                          'testGenerator',
                                           'linterConfig',
                                           'disableConsoleLogging'];
 
@@ -20,6 +21,7 @@ StyleLinter.prototype.availableOptions = ['onError',
  * Options
  * - linterConfig           (StyleLint options)
  * - onError                (Hook when error occurs)
+ * - testGenerator          (Hook for custom test generation)
  * - generateTests          (Generate tests for all files)
  * - testFailingFiles       (Generate tests for failing files)
  * - testPassingFiles       (Generate tests for passing files)
@@ -35,6 +37,11 @@ function StyleLinter(inputNodes, options) {
 
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
+    if( option === 'testGenerator'){
+      if(!options[option]){
+        continue;
+      }
+    }
     this[option] = options[option];
     delete options[option];
   }

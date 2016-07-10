@@ -133,6 +133,18 @@ describe('Broccoli StyleLint Plugin', function() {
       });
 
       describe('Generate Tests', function(){
+        it('accepted testGenerator property', function() {
+          generateTestsConfig.generateTests = true;
+          generateTestsConfig.testGenerator = function(relativePath, errors){
+            return "custom test"
+          }
+          var test = "custom test"
+          return expect(buildAndLint('tests/fixtures/no-errors', generateTestsConfig)
+                                    .then(walkTestsOutputReadableTree)
+                                    .then(readTestFile)
+                       ).to.eventually.equal(test);
+        })
+
         it('generates all tests regardless of other test config when true', function() {
           generateTestsConfig.generateTests = true;
           generatorOptionsTest(3,generateTestsConfig);
