@@ -113,7 +113,7 @@ StyleLinter.prototype.build = function() {
        if(_this.onError)
          _this.onError(results.results[0]);
        if(_this.testFailingFiles){
-         return _this.erroredTestGenerator(relativePath, results.results[0]);
+         return _this.testGenerator(relativePath, results.results[0]);
        } else {
          return '';
        }
@@ -121,7 +121,7 @@ StyleLinter.prototype.build = function() {
          console.log(results.output);
      } else {
        if(_this.testPassingFiles){
-         return _this.passedTestGenerator(relativePath);
+         return _this.testGenerator(relativePath);
        }else {
          return '';
        }
@@ -135,32 +135,25 @@ StyleLinter.prototype.build = function() {
  };
 
  /**
-  * @method passedTestGenerator
+  * @method testGenerator
   *
-  *  Geneartes tests for passing lints
+  *  Geneartes tests.
   */
-StyleLinter.prototype.erroredTestGenerator = function(relativePath, errors) {
+StyleLinter.prototype.testGenerator = function(relativePath, errors) {
   var assertions = [];
   var module  = "module('Style Lint');\n";
   var test = "test('" + relativePath + " should pass stylelint', function() {\n";
-  for(var i = 0; i < errors.warnings.length; i++){
-    var warning = errors.warnings[i];
-    var index = warning.line+':'+warning.column;
-    assertions.push("  ok(" + false + ", '"+index +" "+escapeString(warning.text)+"');");
+  if(!errors){
+    var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
+    return module+test+assertion+"\n});\n";
+  } else {
+    for(var i = 0; i < errors.warnings.length; i++){
+      var warning = errors.warnings[i];
+      var index = warning.line+':'+warning.column;
+      assertions.push("  ok(" + false + ", '"+index +" "+escapeString(warning.text)+"');");
+    }
+    return module+test+assertions.join('\n')+"\n});\n";
   }
-  return module+test+assertions.join('\n')+"\n});\n";
-};
-
-/**
- * @method passedTestGenerator
- *
- *  Geneartes tests for passing lints
- */
-StyleLinter.prototype.passedTestGenerator = function(relativePath) {
-  var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
-  var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
-  return module+test+assertion+"\n});\n";
 };
 
 module.exports = StyleLinter;
