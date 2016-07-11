@@ -140,6 +140,12 @@ StyleLinter.prototype.build = function() {
      console.error(err.stack);
    });
  };
+ /**
+  * @method testGenerator
+  *
+  *  Alias of escapeString for hooks
+  */
+StyleLinter.prototype.escapeErrorString = escapeString;
 
  /**
   * @method testGenerator
@@ -157,7 +163,7 @@ StyleLinter.prototype.testGenerator = function(relativePath, errors) {
     for(var i = 0; i < errors.warnings.length; i++){
       var warning = errors.warnings[i];
       var index = warning.line+':'+warning.column;
-      assertions.push("  ok(" + false + ", '"+index +" "+escapeString(warning.text)+"');");
+      assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
     }
     return module+test+assertions.join('\n')+"\n});\n";
   }
