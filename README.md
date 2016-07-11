@@ -32,6 +32,7 @@ the default output will be the same SCSS files, in the same tree structure.
 
 Instead of receiving a tree of scss files, the plugin will output a tree of test files
 
+
 **original tree**
 ```
 .
@@ -70,9 +71,16 @@ Hash as specified by [stylelint](https://github.com/stylelint/stylelint/blob/mas
 
 doesn't accept `files` option
 
-`onError` {function}
+`onError(errors)` {function}
 
-A hook that allows you to do whatever you want
+A hook that allows you to do whatever you want, when an error occurs
+ - errors `array of errors`
+
+`testGenerator(relativePath, errors)` {function}
+
+A hook that allows you generate tests.
+ - relativePath `path of currently linted file`
+- errors `array of errors if null then no errors occured`
 
 `testFailingFiles` {boolean}
 
