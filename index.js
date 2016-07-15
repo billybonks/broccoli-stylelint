@@ -147,6 +147,14 @@ StyleLinter.prototype.build = function() {
   */
 StyleLinter.prototype.escapeErrorString = escapeString;
 
+/**
+ * @method testGenerator
+ *
+ *  Creates a pretty error string from error object.
+ */
+StyleLinter.prototype.errorToString = function(error){
+  return error.line+':'+error.column + " "+this.escapeErrorString(error.text);
+};
  /**
   * @method testGenerator
   *
@@ -162,8 +170,7 @@ StyleLinter.prototype.testGenerator = function(relativePath, errors) {
   } else {
     for(var i = 0; i < errors.warnings.length; i++){
       var warning = errors.warnings[i];
-      var index = warning.line+':'+warning.column;
-      assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
+      assertions.push("  ok(" + false + ", '"+ this.errorToString(warning)+ "');");
     }
     return module+test+assertions.join('\n')+"\n});\n";
   }
