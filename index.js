@@ -37,10 +37,8 @@ function StyleLinter(inputNodes, options) {
 
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
-    if( option === 'testGenerator'){
-      if(!options[option]){
-        continue;
-      }
+    if(typeof options[option] === "undefined" || options[option] === null){
+      continue;
     }
     this[option] = options[option];
     delete options[option];
