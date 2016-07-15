@@ -117,13 +117,13 @@ StyleLinter.prototype.build = function() {
      if(results.errored){
        if(_this.onError)
          _this.onError(results.results[0]);
+       if(!_this.disableConsoleLogging )
+         console.log(results.output);
        if(_this.testFailingFiles){
          return _this.testGenerator(relativePath, results.results[0]);
        } else {
          return '';
        }
-       if(!_this.disableConsoleLogging )
-         console.log(results.output);
      } else {
        if(_this.testPassingFiles){
          return _this.testGenerator(relativePath);
