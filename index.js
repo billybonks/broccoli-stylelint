@@ -2,6 +2,7 @@ var Filter =        require('broccoli-filter');
 var escapeString =  require('js-string-escape');
 var stylelint =     require('stylelint');
 var merge =         require('merge');
+var chalk =         require('chalk');
 
 /* Setup class */
 StyleLinter.prototype = Object.create(Filter.prototype);
@@ -30,6 +31,8 @@ StyleLinter.prototype.availableOptions = ['onError',
  */
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
+  this._errors = [];
+  this.log = true;
 
   if(!options.linterConfig){
     options.linterConfig = {};
@@ -98,7 +101,14 @@ StyleLinter.prototype.setSyntax = function(syntax) {
  * @override
  */
 StyleLinter.prototype.build = function() {
+  var self = this;
+
   return Filter.prototype.build.call(this).finally(function() {
+    if (self._errors.length > 0) {
+      var label = ' StyleLint Error' + (self._errors.length > 1 ? 's' : '');
+      self.console.log('\n' + self._errors.join('\n'));
+      self.console.log(chalk.yellow('===== ' + self._errors.length + label + '\n'));
+    }
   });
 };
 
@@ -117,10 +127,16 @@ StyleLinter.prototype.build = function() {
       //sets the value to relative path otherwise it would be absolute path
      results.results[0].source = relativePath;
      if(results.errored){
+       var errors = results.results[0];
        if(_this.onError)
-         _this.onError(results.results[0]);
+        if(this.log){
+          for(var i = 0; i < errors.warnings.length; i++){
+            this.logError(this.errorToString(errors.warnings[i]));
+          }
+        }
+         _this.onError(errors);
        if(_this.testFailingFiles){
-         return _this.testGenerator(relativePath, results.results[0]);
+         return _this.testGenerator(relativePath, errors);
        } else {
          return '';
        }
@@ -140,6 +156,12 @@ StyleLinter.prototype.build = function() {
      console.error(err.stack);
    });
  };
+
+ StyleLinter.prototype.logError = function(message, color) {
+  color = color || 'red';
+
+  this._errors.push(chalk[color](message) + "\n");
+};
  /**
   * @method testGenerator
   *
