@@ -37,14 +37,14 @@ describe('Broccoli StyleLint Plugin', function() {
     it('ignores file specified config');
 
     it('stylelint plugins work', function(){
-      var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
+      var opt = {log:false, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
       return buildAndLint('tests/fixtures/test-plugin', opt).then(function(results){
         assert.equal(lintErrors[0].warnings.length,1);
       });
     });
 
     it('returns usefull source name onError', function(){
-      var opt = {disableConsoleLogging:true, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
+      var opt = {log:false, linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
       return buildAndLint('tests/fixtures/test-plugin', opt).then(function(results){
         assert.equal(lintErrors[0].source,'has-error.scss');
       });
@@ -106,28 +106,28 @@ describe('Broccoli StyleLint Plugin', function() {
       var loggingTestConfig;
 
       beforeEach(function() {
-        loggingTestConfig  = {disableConsoleLogging:false,
+        loggingTestConfig  = {log:true,
                                console: console,
                                linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
       });
 
 
-      it('should log when disableConsoleLogging=false', function(){
+      it('should log when log=true', function(){
         chai.spy.on(console, 'log');
         return buildAndLint('tests/fixtures/test-plugin', loggingTestConfig).then(function(results){
           expect(console.log).to.have.been.called();
         });
       })
 
-      it('should not log when disableConsoleLogging=true', function(){
+      it('should not log when log=false', function(){
         chai.spy.on(console, 'log');
-        loggingTestConfig.disableConsoleLogging = true
+        loggingTestConfig.log = false
         return buildAndLint('tests/fixtures/test-plugin', loggingTestConfig).then(function(results){
           expect(console.log).to.not.have.been.called();
         });
       })
     })
-    
+
     describe('StyleLint Configuration', function(){
 
       it('cant set files option', function(){
@@ -158,7 +158,7 @@ describe('Broccoli StyleLint Plugin', function() {
       }
 
       beforeEach(function() {
-        generateTestsConfig  = {disableConsoleLogging:true, linterConfig:{syntax:'sass', formatter: 'string'}};
+        generateTestsConfig  = {log:false, linterConfig:{syntax:'sass', formatter: 'string'}};
       });
 
       describe('Generate Tests', function(){
@@ -223,7 +223,7 @@ describe('Broccoli StyleLint Plugin', function() {
     var generateTestsConfig;
 
     beforeEach(function() {
-      generateTestsConfig  = {disableConsoleLogging:true, linterConfig:{syntax:'sass', formatter: 'string'}};
+      generateTestsConfig  = {log:false, linterConfig:{syntax:'sass', formatter: 'string'}};
     });
 
     it('correctly handles nested folders', function() {
@@ -278,7 +278,7 @@ function walkTestsOutputReadableTree(results){
 }
 
 function buildAndLint(sourcePath, options, onError) {
-  options = options || {disableConsoleLogging:true, linterConfig:{syntax:'sass', formatter: 'string'}};
+  options = options || {log:false, linterConfig:{syntax:'sass', formatter: 'string'}};
   options.onError = function(results) {
     lintErrors.push(results);
   };

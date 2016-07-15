@@ -14,7 +14,7 @@ StyleLinter.prototype.availableOptions = ['onError',
                                           'testPassingFiles' ,
                                           'testGenerator',
                                           'linterConfig',
-                                          'disableConsoleLogging',
+                                          'log',
                                           'console'];
 
 /**
@@ -26,8 +26,8 @@ StyleLinter.prototype.availableOptions = ['onError',
  * - generateTests          (Generate tests for all files)
  * - testFailingFiles       (Generate tests for failing files)
  * - testPassingFiles       (Generate tests for passing files)
- * - disableConsoleLogging  (Disables error logging in console)
- * - console  (Custom console)
+ * - log                    (Disables error logging in console)
+ * - console                (Custom console)
  * @class
  */
 function StyleLinter(inputNodes, options) {
@@ -35,6 +35,12 @@ function StyleLinter(inputNodes, options) {
 
   if(!options.linterConfig){
     options.linterConfig = {};
+  }
+
+  this.log = true;
+  if(typeof options['disableConsoleLogging'] !== "undefined"){
+    console.warn('"disableConsoleLogging" propety has been deprecated in favour of "log"');
+    this.log = !options['disableConsoleLogging'];
   }
 
   for(var i = 0; i < this.availableOptions.length; i++){
@@ -119,7 +125,7 @@ StyleLinter.prototype.build = function() {
      if(results.errored){
        if(_this.onError)
          _this.onError(results.results[0]);
-       if(!_this.disableConsoleLogging )
+       if(_this.log )
          _this.console.log(results.output);
        if(_this.testFailingFiles){
          return _this.testGenerator(relativePath, results.results[0]);
