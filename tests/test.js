@@ -3,9 +3,12 @@ var StyleLinter =    require('..');
 var walkSync =       require('walk-sync');
 var broccoli =       require('broccoli');
 var chai =           require('chai');
+var spies =          require('chai-spies');
 var fs =             require('fs');
 
 chai.use(chaiAsPromised);
+chai.use(spies);
+
 var assert = chai.assert;
 var expect = chai.expect;
 var builder, lintErrors;
@@ -99,6 +102,32 @@ describe('Broccoli StyleLint Plugin', function() {
 
     });
 
+    describe('logging', function() {
+      var loggingTestConfig;
+
+      beforeEach(function() {
+        loggingTestConfig  = {disableConsoleLogging:false,
+                               console: console,
+                               linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}};
+      });
+
+
+      it('should log when disableConsoleLogging=false', function(){
+        chai.spy.on(console, 'log');
+        return buildAndLint('tests/fixtures/test-plugin', loggingTestConfig).then(function(results){
+          expect(console.log).to.have.been.called();
+        });
+      })
+
+      it('should not log when disableConsoleLogging=true', function(){
+        chai.spy.on(console, 'log');
+        loggingTestConfig.disableConsoleLogging = true
+        return buildAndLint('tests/fixtures/test-plugin', loggingTestConfig).then(function(results){
+          expect(console.log).to.not.have.been.called();
+        });
+      })
+    })
+    
     describe('StyleLint Configuration', function(){
 
       it('cant set files option', function(){
@@ -231,6 +260,7 @@ describe('Broccoli StyleLint Plugin', function() {
                    ).to.eventually.equal(passedTestAssertion);
     });
   });
+
 });
 
 function readTestFile(testPaths){
