@@ -14,7 +14,8 @@ StyleLinter.prototype.availableOptions = ['onError',
                                           'testPassingFiles' ,
                                           'testGenerator',
                                           'linterConfig',
-                                          'disableConsoleLogging'];
+                                          'disableConsoleLogging',
+                                          'console'];
 
 /**
  * Creates a new StyleLinter instance.
@@ -26,6 +27,7 @@ StyleLinter.prototype.availableOptions = ['onError',
  * - testFailingFiles       (Generate tests for failing files)
  * - testPassingFiles       (Generate tests for passing files)
  * - disableConsoleLogging  (Disables error logging in console)
+ * - console  (Custom console)
  * @class
  */
 function StyleLinter(inputNodes, options) {
@@ -118,7 +120,7 @@ StyleLinter.prototype.build = function() {
        if(_this.onError)
          _this.onError(results.results[0]);
        if(!_this.disableConsoleLogging )
-         console.log(results.output);
+         _this.console.log(results.output);
        if(_this.testFailingFiles){
          return _this.testGenerator(relativePath, results.results[0]);
        } else {
