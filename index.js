@@ -14,7 +14,8 @@ StyleLinter.prototype.availableOptions = ['onError',
                                           'testPassingFiles' ,
                                           'testGenerator',
                                           'linterConfig',
-                                          'disableConsoleLogging'];
+                                          'log',
+                                          'console'];
 
 /**
  * Creates a new StyleLinter instance.
@@ -25,7 +26,8 @@ StyleLinter.prototype.availableOptions = ['onError',
  * - generateTests          (Generate tests for all files)
  * - testFailingFiles       (Generate tests for failing files)
  * - testPassingFiles       (Generate tests for passing files)
- * - disableConsoleLogging  (Disables error logging in console)
+ * - log                    (Disables error logging in console)
+ * - console                (Custom console)
  * @class
  */
 function StyleLinter(inputNodes, options) {
@@ -35,12 +37,16 @@ function StyleLinter(inputNodes, options) {
     options.linterConfig = {};
   }
 
+  this.log = true;
+  if(typeof options['disableConsoleLogging'] !== "undefined"){
+    console.warn('"disableConsoleLogging" propety has been deprecated in favour of "log"');
+    this.log = !options['disableConsoleLogging'];
+  }
+
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
-    if( option === 'testGenerator'){
-      if(!options[option]){
-        continue;
-      }
+    if(typeof options[option] === "undefined" || options[option] === null){
+      continue;
     }
     this[option] = options[option];
     delete options[option];
@@ -119,13 +125,13 @@ StyleLinter.prototype.build = function() {
      if(results.errored){
        if(_this.onError)
          _this.onError(results.results[0]);
+       if(_this.log )
+         _this.console.log(results.output);
        if(_this.testFailingFiles){
          return _this.testGenerator(relativePath, results.results[0]);
        } else {
          return '';
        }
-       if(!_this.disableConsoleLogging )
-         console.log(results.output);
      } else {
        if(_this.testPassingFiles){
          return _this.testGenerator(relativePath);
