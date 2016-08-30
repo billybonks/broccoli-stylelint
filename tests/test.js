@@ -15,8 +15,6 @@ var expect = chai.expect;
 var builder, lintErrors;
 
 describe('Broccoli StyleLint Plugin', function() {
-
-
   afterEach(function() {
     if (builder.cleanup) {
       builder.cleanup();
@@ -28,7 +26,6 @@ describe('Broccoli StyleLint Plugin', function() {
   });
 
   describe('Broccoli build', function() {
-
     it('catches errors', function() {
       return buildAndLint('tests/fixtures/has-errors').then(function(results) {
         assert.equal(lintErrors[0].warnings.length,2);
@@ -38,13 +35,13 @@ describe('Broccoli StyleLint Plugin', function() {
     it('ignores file specified config');
 
     it('stylelint plugins work', function(){
-      return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(results){
+      return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(results){
         assert.equal(lintErrors[0].warnings.length,1);
       });
     });
 
     it('returns usefull source name onError', function(){
-      return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'sass', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(results){
+      return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(results){
         assert.equal(lintErrors[0].source,'has-error.scss');
       });
     });
@@ -134,7 +131,7 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     it('sets options on object', function(){
-      var linterConfig = {syntax:'sass'};
+      var linterConfig = {syntax:'scss'};
       var options = {linterConfig:linterConfig, generateTests:true};
       var linter = new StyleLinter('', options);
       expect(linter.generateTests).to.equal(true);
@@ -255,7 +252,7 @@ function walkTestsOutputReadableTree(results){
 }
 
 function buildAndLint(sourcePath, options, onError) {
-  var defaultOptions = {log:false, linterConfig:{syntax:'sass', formatter: 'string'}};
+  var defaultOptions = {log:false, linterConfig:{syntax:'scss', formatter: 'string'}};
   if(options){
     options = merge(defaultOptions,options);
   } else {
