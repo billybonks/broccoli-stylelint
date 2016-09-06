@@ -71,14 +71,9 @@ describe('Broccoli StyleLint Plugin', function() {
         assertExtensions(extension, extension, [extension]);
       });
 
-      it('accepts sass',function(){
-        var extension = 'sass';
-        assertExtensions(extension, extension, ['scss', extension]);
-      });
-
       it('accepts scss',function(){
         var extension = 'scss';
-        assertExtensions(extension, extension, ['sass', extension]);
+        assertExtensions(extension, extension, [extension]);
       });
 
       it('accepts sugarss',function(){
@@ -93,7 +88,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
       it('defaults to scss',function(){
         var extension = 'scss';
-        assertExtensions(null, extension, ['sass', extension]);
+        assertExtensions(null, extension, [extension]);
       });
 
     });

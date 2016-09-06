@@ -78,14 +78,7 @@ StyleLinter.prototype.setSyntax = function(syntax) {
   if(!syntax)
     syntax = 'scss';
     this.linterConfig.syntax = syntax;
-  if(syntax === 'scss' || syntax === 'sass') {
-    if(syntax === 'scss'){
-      extensions.push('sass');
-    } else {
-      extensions.push('scss');
-    }
-    targetExtension = syntax;
-  } else if(syntax === 'sugarss') {
+  if(syntax === 'sugarss') {
     targetExtension = 'sss';
   } else {
     targetExtension = syntax;
