@@ -30,9 +30,9 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "chai-spies": "^0.7.1",
-    "mocha": "^2.4.5",
+    "mocha": "^3.0.2",
     "stylelint-selector-bem-pattern": "^1.0.0",
-    "walk-sync": "^0.2.6"
+    "walk-sync": "^0.3.1"
   },
   "dependencies": {
     "broccoli-filter": "^1.2.3",
