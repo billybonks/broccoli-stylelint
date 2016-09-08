@@ -26,12 +26,11 @@ var node = new StyleLint('app/styles');
 
 the default output will be the same SCSS files, in the same tree structure.
 
-###Generating Tests
+###Tests
 
-`var node = new StyleLint('app/styles', {generateTests:true});`
+Tests are automatically generated
 
-Instead of receiving a tree of scss files, the plugin will output a tree of test files
-
+If tests are generated the plugin will output a tree of test files
 
 **original tree**
 ```
@@ -60,7 +59,35 @@ new Funnel(node, {
   srcDir:'tests',
 });
 ```
-See below for more advaned test configurations
+
+If test generation is disabled the plugin will return the original tree
+
+** Disable test generation **
+set the option `disableTestGeneration:true`
+
+`var node = new StyleLint('app/styles', {disableTestGeneration:true});`
+
+** Custom test generator **
+If you want to build your own test generator set the `testGenerator` option to a function that will generate the tests
+
+```javascript
+StyleLinter.prototype.testGenerator = function(relativePath, errors) {
+  var assertions = [];
+  var module  = "module('Style Lint');\n";
+  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
+  if(!errors){
+    var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
+    return module+test+assertion+"\n});\n";
+  } else {
+    for(var i = 0; i < errors.warnings.length; i++){
+      var warning = errors.warnings[i];
+      var index = warning.line+':'+warning.column;
+      assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
+    }
+    return module+test+assertions.join('\n')+"\n});\n";
+  }
+};
+```
 
 Configuration
 =====
@@ -90,10 +117,16 @@ If true it will generate a unit test if the file fails lint.
 
 If true it  will generate a unit test if the passes fails lint.
 
-`generateTests` {boolean}
+`disableTestGeneration` {boolean}
 
-If true it will generate tests for both passing and failing tests, overrides the testPassingFiles and testFailingFiles
+Will disable generation of tests
 
 `disableConsoleLogging` {boolean}
 
 If true it will disable logging of errors to console
+
+`log` {boolean}
+If true it will log results to console
+
+`console` {object}
+A custom console object
