@@ -124,3 +124,9 @@ Will disable generation of tests
 `disableConsoleLogging` {boolean}
 
 If true it will disable logging of errors to console
+
+`log` {boolean}
+If true it will log results to console
+
+`console` {object}
+A custom console object
