@@ -127,9 +127,9 @@ describe('Broccoli StyleLint Plugin', function() {
 
     it('sets options on object', function(){
       var linterConfig = {syntax:'scss'};
-      var options = {linterConfig:linterConfig, generateTests:true};
+      var options = {linterConfig:linterConfig, disableTestGeneration:true};
       var linter = new StyleLinter('', options);
-      expect(linter.generateTests).to.equal(true);
+      expect(linter.disableTestGeneration).to.equal(true);
       expect(linter.linterConfig).to.eql(linterConfig);
     });
 
@@ -145,7 +145,6 @@ describe('Broccoli StyleLint Plugin', function() {
       describe('Generate Tests', function(){
         it('accepted testGenerator property', function() {
           var opt = {
-            generateTests:true,
             testGenerator:function(relativePath, errors){
               return "custom test"
             }
@@ -157,12 +156,8 @@ describe('Broccoli StyleLint Plugin', function() {
                        ).to.eventually.equal(test);
         })
 
-        it('generates all tests regardless of other test config when true', function() {
-          generatorOptionsTest(3,{generateTests:true});
-        });
-
-        it('generates no tests regardless of other test config when false', function() {
-          generatorOptionsTest(3,{generateTests:true});
+        it('generates no tests regardless of other test config when disableTestGeneration is true', function() {
+          generatorOptionsTest(3,{disableTestGeneration:true});
         });
       });
       function buildAndAssertFile(options, relativePath, equal) {

@@ -9,7 +9,7 @@ StyleLinter.prototype.constructor = StyleLinter;
 
 /* Used to extract and delete options from input hash */
 StyleLinter.prototype.availableOptions = ['onError',
-                                          'generateTests',
+                                          'disableTestGeneration',
                                           'testFailingFiles',
                                           'testPassingFiles' ,
                                           'testGenerator',
@@ -23,7 +23,7 @@ StyleLinter.prototype.availableOptions = ['onError',
  * - linterConfig           (StyleLint options)
  * - onError                (Hook when error occurs)
  * - testGenerator          (Hook for custom test generation)
- * - generateTests          (Generate tests for all files)
+ * - disableTestGeneration  (Disable generatation tests for all files)
  * - testFailingFiles       (Generate tests for failing files)
  * - testPassingFiles       (Generate tests for passing files)
  * - log                    (Disables error logging in console)
@@ -56,11 +56,13 @@ function StyleLinter(inputNodes, options) {
     formatter: 'string'
   });
 
-  if(this.generateTests === false || this.generateTests === true){
-    this.testFailingFiles = this.generateTests;
-    this.testPassingFiles = this.generateTests;
+  if(typeof this.testFailingFiles === 'undefined' && typeof this.testPassingFiles === 'undefined' && typeof this.disableTestGeneration === 'undefined'){
+    this.testFailingFiles = true;
+    this.testPassingFiles = true;
+  }else if( typeof this.disableTestGeneration !== 'undefined' ){
+    this.testFailingFiles = typeof this.testFailingFiles === 'undefined' ? !this.disableTestGeneration : this.testFailingFiles;
+    this.testPassingFiles  = typeof this.testPassingFiles === 'undefined' ? !this.disableTestGeneration : this.testPassingFiles;
   }
-
   this.linterConfig.files = null;
 
   this.setSyntax(this.linterConfig.syntax);
