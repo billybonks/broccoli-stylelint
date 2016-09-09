@@ -1,4 +1,4 @@
-var Filter =        require('broccoli-filter');
+var Filter =        require('broccoli-persistent-filter');
 var escapeString =  require('js-string-escape');
 var stylelint =     require('stylelint');
 var merge =         require('merge');

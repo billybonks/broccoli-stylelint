@@ -1,6 +1,6 @@
 {
   "name": "broccoli-stylelint",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Broccoli stylelint plugin",
   "keywords": [
     "broccoli",
@@ -35,7 +35,7 @@
     "walk-sync": "^0.3.1"
   },
   "dependencies": {
-    "broccoli-filter": "^1.2.3",
+    "broccoli-persistent-filter": "^1.2.11",
     "js-string-escape": "^1.0.1",
     "merge": "^1.2.0",
     "stylelint": "^7.2.0"
