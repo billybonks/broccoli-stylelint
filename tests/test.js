@@ -248,7 +248,6 @@ function buildAndLint(sourcePath, options, onError) {
   } else {
     options = defaultOptions;
   }
-  //console.log(options)
   options.onError = function(results) {
     lintErrors.push(results);
   };

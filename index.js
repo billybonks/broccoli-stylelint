@@ -106,42 +106,73 @@ StyleLinter.prototype.build = function() {
 /**
  * This method is executed for every scss file, it:
  *  - Calls onError
- *  - Logs to console
- *  - Generate tests
  * @override
  */
- StyleLinter.prototype.processString = function(content, relativePath) {
-   var _this = this;
-   this.linterConfig.code = content;
-   this.linterConfig.codeFilename = relativePath;
-   return stylelint.lint(this.linterConfig).then(function(results){
-      //sets the value to relative path otherwise it would be absolute path
-     results.results[0].source = relativePath;
-     if(results.errored){
-       if(_this.onError)
-         _this.onError(results.results[0]);
-       if(_this.log )
-         _this.console.log(results.output);
-       if(_this.testFailingFiles){
-         return _this.testGenerator(relativePath, results.results[0]);
-       } else {
-         return '';
-       }
-     } else {
-       if(_this.testPassingFiles){
-         return _this.testGenerator(relativePath);
-       }else {
-         return '';
-       }
-     }
+StyleLinter.prototype.processString = function(content, relativePath) {
+ var self = this;
+ this.linterConfig.code = content;
+ this.linterConfig.codeFilename = relativePath;
+ return stylelint.lint(this.linterConfig).then(function(results){
+  //sets the value to relative path otherwise it would be absolute path
+  results = self.processResults(results, relativePath);
+  if(results.errored && self.testFailingFiles) {
+   results.output = self.testGenerator(relativePath, results);
+  } else if(!results.errored && self.testPassingFiles) {
+     results.output = self.testGenerator(relativePath);
+  }
+  return results;
+ }).catch(function(err) {
+   console.error(err.stack);
+ });
+};
 
-   })
-   .catch(function(err) {
-     // do things with err e.g.
-     console.error(err.stack);
-   });
- };
- /**
+/**
+  * @method postProcess
+  * This method is called after, the file has been linted:
+  *  - Logs to console
+  *  - Generate tests
+  * @override
+  */
+StyleLinter.prototype.postProcess = function(results, relativePath) {
+ if(results.errored){
+   if(this.onError) {
+    this.onError(results);
+   }
+   if(this.log)
+    this.console.log(results.log)
+  }
+  return results;
+};
+
+/**
+  * @method processResults
+  *
+  *  Reformats default results object
+  *  {
+  *   errored: boolean if file errored or not,
+  *   output: String contains test if generate test is true,
+  *   log: String default logging string,
+  *   source: String relitivePath,
+  *   deprecations: Array of errors,
+  *   invalidOptionWarnings: Array,
+  *   warnings: Array of errors,
+  *   ignored: Array ignored files,
+  *   _postcssResult: Object for postcss
+  *  }
+  */
+StyleLinter.prototype.processResults = function(results, relativePath) {
+ var resultsInner = results.results[0];
+ resultsInner.errored = results.errored;
+ resultsInner.source = relativePath;
+ delete results.results;
+ results.log = results.output;
+ Object.assign(results, resultsInner);
+ results.source = relativePath;
+ results.output = '';
+ return results;
+};
+
+/**
   * @method testGenerator
   *
   *  Alias of escapeString for hooks
