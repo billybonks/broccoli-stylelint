@@ -8,14 +8,14 @@ StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
 
 /* Used to extract and delete options from input hash */
-StyleLinter.prototype.availableOptions = ['onError',
-                                          'disableTestGeneration',
-                                          'testFailingFiles',
-                                          'testPassingFiles' ,
-                                          'testGenerator',
-                                          'linterConfig',
-                                          'log',
-                                          'console'];
+StyleLinter.prototype.availableOptions = [{name: 'onError'},
+                                          {name: 'disableTestGeneration'},
+                                          {name: 'testFailingFiles'},
+                                          {name: 'testPassingFiles'},
+                                          {name: 'testGenerator', default: StyleLinter.prototype.testGenerator},
+                                          {name: 'linterConfig', default: {}},
+                                          {name: 'log', default: true},
+                                          {name: 'console', default: console}];
 
 /**
  * Creates a new StyleLinter instance.
@@ -33,23 +33,18 @@ StyleLinter.prototype.availableOptions = ['onError',
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
 
-  if(!options.linterConfig){
-    options.linterConfig = {};
+  for(var i = 0; i < this.availableOptions.length; i++){
+    var option = this.availableOptions[i];
+    var name = option.name;
+    var defaultValue = option.default || this[name];
+    this[name] = typeof options[name] === "undefined" ?  defaultValue : options[name];
+    delete options[name];
   }
 
-  this.log = true;
+  //TODO:remove this deprecation on v1 release
   if(typeof options['disableConsoleLogging'] !== "undefined"){
     console.warn('"disableConsoleLogging" propety has been deprecated in favour of "log"');
     this.log = !options['disableConsoleLogging'];
-  }
-
-  for(var i = 0; i < this.availableOptions.length; i++){
-    var option = this.availableOptions[i];
-    if(typeof options[option] === "undefined" || options[option] === null){
-      continue;
-    }
-    this[option] = options[option];
-    delete options[option];
   }
 
   merge(this.linterConfig, {
