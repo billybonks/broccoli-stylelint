@@ -52,8 +52,8 @@ describe('Broccoli StyleLint Plugin', function() {
     describe('Formatter', function(){
 
       it('uses string formatter by default', function(){
-        var tree = new StyleLinter('', {});
-        expect(tree.linterConfig.formatter).to.eql('string');
+        builder = new StyleLinter('', {});
+        expect(builder.linterConfig.formatter).to.eql('string');
       });
 
     });
@@ -102,7 +102,7 @@ describe('Broccoli StyleLint Plugin', function() {
       })
 
       it('should log when log=true', function(){
-        return buildAndLint('tests/fixtures/has-errors', {disableConsoleLogging:false, log:null, console: fakeConsole}).then(function(results){
+        return buildAndLint('tests/fixtures/has-errors', {disableConsoleLogging:false, console: fakeConsole}).then(function(results){
           expect(fakeConsole.log).to.have.been.called();
         });
       })
@@ -248,7 +248,6 @@ function buildAndLint(sourcePath, options, onError) {
   } else {
     options = defaultOptions;
   }
-  //console.log(options)
   options.onError = function(results) {
     lintErrors.push(results);
   };
