@@ -13,6 +13,7 @@ StyleLinter.prototype.availableOptions = [{name: 'onError'},
                                           {name: 'testFailingFiles'},
                                           {name: 'testPassingFiles'},
                                           {name: 'testGenerator', default: StyleLinter.prototype.testGenerator},
+                                          {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
                                           {name: 'linterConfig', default: {}},
                                           {name: 'log', default: true},
                                           {name: 'console', default: console}];
@@ -134,7 +135,7 @@ StyleLinter.prototype.postProcess = function(results, relativePath) {
     this.onError(results);
    }
    if(this.log)
-    this.console.log(results.log)
+    this.consoleLogger(results, relativePath);
   }
   return results;
 };
@@ -174,7 +175,18 @@ StyleLinter.prototype.processResults = function(results, relativePath) {
   */
 StyleLinter.prototype.escapeErrorString = escapeString;
 
- /**
+
+
+/**
+  * @method consoleLogger
+  *
+  *  Geneartes tests.
+  */
+StyleLinter.prototype.consoleLogger = function(results, relativePath) {
+  this.console.log(results.log);
+};
+
+/**
   * @method testGenerator
   *
   *  Geneartes tests.

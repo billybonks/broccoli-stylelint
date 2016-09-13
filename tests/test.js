@@ -133,6 +133,15 @@ describe('Broccoli StyleLint Plugin', function() {
       expect(linter.linterConfig).to.eql(linterConfig);
     });
 
+    it('accepts a custom logger', function() {
+      var spy = chai.spy();
+      buildAndLint('tests/fixtures/test-generation', {linterConfig:{syntax:'scss'}, log:true, consoleLogger:spy}).then(
+        function(){
+          expect(spy).to.have.been.called();
+        }
+      )
+    })
+
     describe('Tests', function () {
 
       function generatorOptionsTest(testFileCount, options){
