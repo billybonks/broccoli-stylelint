@@ -108,7 +108,7 @@ describe('Broccoli StyleLint Plugin', function() {
       })
 
       it('should not log when log=false', function(){
-        return buildAndLint('tests/fixtures/test-plugin', {log: false,console: fakeConsole}).then(function(results){
+        return buildAndLint('tests/fixtures//has-errors', {log: false,console: fakeConsole}).then(function(results){
           expect(fakeConsole.log).to.not.have.been.called();
         });
       })
