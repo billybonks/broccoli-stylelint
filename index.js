@@ -61,7 +61,7 @@ function StyleLinter(inputNodes, options) {
   }
   this.linterConfig.files = null;
 
-  this.setSyntax(this.linterConfig.syntax);
+  this.setSyntax(this.linterConfig);
 
   Filter.call(this, inputNodes, options);
 }
@@ -70,7 +70,8 @@ function StyleLinter(inputNodes, options) {
  * Sets the, file extensions that the broccoli plugin must parse
  * @param {string} syntax sass|css|less|sugarss
  */
-StyleLinter.prototype.setSyntax = function(syntax) {
+StyleLinter.prototype.setSyntax = function(config) {
+  var syntax = config.syntax;
   var extensions = [];
   var targetExtension;
   if(!syntax)
@@ -80,6 +81,9 @@ StyleLinter.prototype.setSyntax = function(syntax) {
     targetExtension = 'sss';
   } else {
     targetExtension = syntax;
+  }
+  if(syntax === 'css'){
+    config.syntax = "";
   }
   extensions.push(targetExtension);
   if(this.testPassingFiles || this.testFailingFiles)
