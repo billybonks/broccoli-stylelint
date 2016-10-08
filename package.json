@@ -38,6 +38,6 @@
     "broccoli-persistent-filter": "^1.2.11",
     "js-string-escape": "^1.0.1",
     "merge": "^1.2.0",
-    "stylelint": "^7.2.0"
+    "stylelint": "^7.4.0"
   }
 }
