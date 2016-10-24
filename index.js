@@ -1,7 +1,26 @@
-var Filter =        require('broccoli-persistent-filter');
-var escapeString =  require('js-string-escape');
-var stylelint =     require('stylelint');
-var merge =         require('merge');
+var Filter =           require('broccoli-persistent-filter');
+var escapeString =     require('js-string-escape');
+var stylelint =        require('stylelint');
+var merge =            require('merge');
+var path =             require('path');
+var broccoliNodeInfo = require('broccoli-node-info');
+
+function resolveInputDirectory(inputNodes) {
+  if (typeof inputNodes === 'string') {
+    return inputNodes;
+  }
+
+  const nodeInfo = broccoliNodeInfo.getNodeInfo(inputNodes);
+  if (nodeInfo.nodeType === 'source') {
+    return nodeInfo.sourceDirectory;
+  }
+
+  if (nodeInfo.inputNodes.length > 1) {
+    throw new Error('broccoli-stylelint can only handle one:* broccoli nodes, but part of the given input pipeline is a many:* node. (broccoli-merge-trees is an example of a many:* node) Please perform many:* operations after linting.');
+  }
+
+  return resolveInputDirectory(nodeInfo.inputNodes[0]);
+};
 
 /* Setup class */
 StyleLinter.prototype = Object.create(Filter.prototype);
@@ -33,6 +52,7 @@ StyleLinter.prototype.availableOptions = [{name: 'onError'},
  */
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
+  this.inputNodesDirectory = resolveInputDirectory(inputNodes);
 
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
@@ -111,7 +131,7 @@ StyleLinter.prototype.build = function() {
 StyleLinter.prototype.processString = function(content, relativePath) {
  var self = this;
  this.linterConfig.code = content;
- this.linterConfig.codeFilename = relativePath;
+ this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
  return stylelint.lint(this.linterConfig).then(function(results){
   //sets the value to relative path otherwise it would be absolute path
   results = self.processResults(results, relativePath);
