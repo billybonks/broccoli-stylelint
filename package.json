@@ -1,6 +1,6 @@
 {
   "name": "broccoli-stylelint",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Broccoli stylelint plugin",
   "keywords": [
     "broccoli",
@@ -26,18 +26,18 @@
   },
   "homepage": "https://github.com/billybonks/broccoli-stylelint#readme",
   "devDependencies": {
-    "broccoli": "^0.16.9",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^5.3.0",
-    "chai-spies": "^0.7.1",
-    "mocha": "^3.0.2",
-    "stylelint-selector-bem-pattern": "^1.0.0",
-    "walk-sync": "^0.3.1"
+    "broccoli": "0.16.9",
+    "chai": "3.5.0",
+    "chai-as-promised": "5.3.0",
+    "chai-spies": "0.7.1",
+    "mocha": "3.0.2",
+    "stylelint-selector-bem-pattern": "1.0.0",
+    "walk-sync": "0.3.1"
   },
   "dependencies": {
-    "broccoli-persistent-filter": "^1.2.11",
-    "js-string-escape": "^1.0.1",
-    "merge": "^1.2.0",
+    "broccoli-persistent-filter": "1.2.11",
+    "js-string-escape": "1.0.1",
+    "merge": "1.2.0",
     "stylelint": "7.3.0"
   }
 }
