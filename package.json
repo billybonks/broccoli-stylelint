@@ -1,6 +1,6 @@
 {
   "name": "broccoli-stylelint",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "description": "Broccoli stylelint plugin",
   "keywords": [
     "broccoli",
