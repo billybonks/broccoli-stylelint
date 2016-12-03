@@ -4,6 +4,7 @@ var stylelint =        require('stylelint');
 var merge =            require('merge');
 var path =             require('path');
 var broccoliNodeInfo = require('broccoli-node-info');
+var chalk            = require('chalk');
 
 function resolveInputDirectory(inputNodes) {
   if (typeof inputNodes === 'string') {
@@ -142,6 +143,16 @@ StyleLinter.prototype.processString = function(content, relativePath) {
   }
   return results;
  }).catch(function(err) {
+   console.error(chalk.red('======= Something went wrong running stylelint ======='))
+   if(err.code === 78){
+     if(err.message.indexOf('No configuration provided') > -1){
+       console.error(chalk.red("No stylelint configuration found please create a .stylelintrc file in the route directory"));
+     } else {
+       console.error(chalk.red(err.message))
+     }
+   } else {
+     console.error(err.stack);
+   }
    console.error(err.stack);
  });
 };
@@ -154,14 +165,18 @@ StyleLinter.prototype.processString = function(content, relativePath) {
   * @override
   */
 StyleLinter.prototype.postProcess = function(results, relativePath) {
- if(results.errored){
-   if(this.onError) {
-    this.onError(results);
-   }
-   if(this.log)
-    this.consoleLogger(results, relativePath);
+  if(results) {
+    if(results.errored){
+      if(this.onError) {
+       this.onError(results);
+      }
+      if(this.log)
+       this.consoleLogger(results, relativePath);
+     }
+     return results;
+  } else {
+    return {}
   }
-  return results;
 };
 
 /**
