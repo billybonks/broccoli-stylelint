@@ -32,7 +32,11 @@ describe('Broccoli StyleLint Plugin', function() {
       });
     });
 
-    it('ignores file specified config');
+    it('ignores file specified config', function(){
+      return buildAndLint('tests/fixtures/ignore').then(function(results) {
+        assert.equal(lintErrors.length,0);
+      });
+    });
 
     it('stylelint plugins work', function(){
       return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(results){
@@ -108,7 +112,7 @@ describe('Broccoli StyleLint Plugin', function() {
       })
 
       it('should not log when log=false', function(){
-        return buildAndLint('tests/fixtures//has-errors', {log: false,console: fakeConsole}).then(function(results){
+        return buildAndLint('tests/fixtures/has-errors', {log: false,console: fakeConsole}).then(function(results){
           expect(fakeConsole.log).to.not.have.been.called();
         });
       })
