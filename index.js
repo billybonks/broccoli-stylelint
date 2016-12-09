@@ -60,7 +60,6 @@ function StyleLinter(inputNodes, options) {
     var name = option.name;
     var defaultValue = option.default || this[name];
     this[name] = typeof options[name] === "undefined" ?  defaultValue : options[name];
-    delete options[name];
   }
 
   //TODO:remove this deprecation on v1 release
