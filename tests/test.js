@@ -120,6 +120,14 @@ describe('Broccoli StyleLint Plugin', function() {
 
     describe('StyleLint Configuration', function(){
 
+      it("doesn't mutate options", function() {
+        function generateTest() { return 'OK!'; }
+        var options = {disableTestGeneration:true, testGenerator: generateTest};
+        new StyleLinter('', options);
+        assert.equal(options.testGenerator, generateTest, 'options.testGenerator is intact');
+        assert.equal(options.disableTestGeneration, true, 'options.disableTestGeneration is intact');
+      });
+
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
         var tree = new StyleLinter('', options);
