@@ -21,7 +21,7 @@ function resolveInputDirectory(inputNodes) {
   }
 
   return resolveInputDirectory(nodeInfo.inputNodes[0]);
-};
+}
 
 /* Setup class */
 StyleLinter.prototype = Object.create(Filter.prototype);
@@ -142,12 +142,12 @@ StyleLinter.prototype.processString = function(content, relativePath) {
   }
   return results;
  }).catch(function(err) {
-   console.error(chalk.red('======= Something went wrong running stylelint ======='))
+   console.error(chalk.red('======= Something went wrong running stylelint ======='));
    if(err.code === 78){
      if(err.message.indexOf('No configuration provided') > -1){
        console.error(chalk.red("No stylelint configuration found please create a .stylelintrc file in the route directory"));
      } else {
-       console.error(chalk.red(err.message))
+       console.error(chalk.red(err.message));
      }
    } else {
      console.error(err.stack);
@@ -174,7 +174,7 @@ StyleLinter.prototype.postProcess = function(results, relativePath) {
      }
      return results;
   } else {
-    return {}
+    return {};
   }
 };
 
@@ -218,7 +218,7 @@ StyleLinter.prototype.escapeErrorString = escapeString;
 /**
   * @method consoleLogger
   *
-  *  Geneartes tests.
+  *  custom console logger
   */
 StyleLinter.prototype.consoleLogger = function(results, relativePath) {
   this.console.log(results.log);
