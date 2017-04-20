@@ -1,6 +1,6 @@
-![Build Status](https://travis-ci.org/billybonks/broccoli-stylelint.svg?branch=master)
+[![Build Status](https://travis-ci.org/billybonks/broccoli-stylelint.svg?branch=master)](https://travis-ci.org/billybonks/broccoli-stylelint/branches)
 ![](https://david-dm.org/billybonks/broccoli-stylelint.svg)
-![downloads](https://img.shields.io/npm/dm/ember-cli-stylelint.svg)
+[![downloads](https://img.shields.io/npm/dm/broccoli-stylelint.svg)](https://www.npmjs.com/package/broccoli-stylelint)
 
 Broccoli Style Lint
 =====
