@@ -6,6 +6,28 @@ var path =             require('path');
 var broccoliNodeInfo = require('broccoli-node-info');
 var chalk            = require('chalk');
 
+//Copied from stylelint, until style lint ignores files properly via node api
+function buildIgnorer(){
+  var ignore = require('ignore');
+  var fs = require('fs');
+  var DEFAULT_IGNORE_FILENAME = '.stylelintignore';
+  var FILE_NOT_FOUND_ERROR_CODE = 'ENOENT';
+  // The ignorer will be used to filter file paths after the glob is checked,
+  // before any files are actually read
+  var ignoreFilePath = DEFAULT_IGNORE_FILENAME;
+  var absoluteIgnoreFilePath = path.isAbsolute(ignoreFilePath)
+    ? ignoreFilePath
+    : path.resolve(process.cwd(), ignoreFilePath);
+  var ignoreText = '';
+  try {
+    ignoreText = fs.readFileSync(absoluteIgnoreFilePath, 'utf8');
+  } catch (readError) {
+    if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) throw readError;
+  }
+  return ignore()
+    .add(ignoreText)
+}
+
 function resolveInputDirectory(inputNodes) {
   if (typeof inputNodes === 'string') {
     return inputNodes;
@@ -54,17 +76,17 @@ StyleLinter.prototype.availableOptions = [{name: 'onError'},
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
   this.inputNodesDirectory = resolveInputDirectory(inputNodes);
-
+  this.ignorer = buildIgnorer();
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
     var name = option.name;
     var defaultValue = option.default || this[name];
-    this[name] = typeof options[name] === "undefined" ?  defaultValue : options[name];
+    this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
   }
 
   //TODO:remove this deprecation on v1 release
-  if(typeof options['disableConsoleLogging'] !== "undefined"){
-    console.warn('"disableConsoleLogging" propety has been deprecated in favour of "log"');
+  if(typeof options['disableConsoleLogging'] !== 'undefined'){
+    console.warn(''disableConsoleLogging' propety has been deprecated in favour of 'log'');
     this.log = !options['disableConsoleLogging'];
   }
 
@@ -103,7 +125,7 @@ StyleLinter.prototype.setSyntax = function(config) {
     targetExtension = syntax;
   }
   if(syntax === 'css'){
-    config.syntax = "";
+    config.syntax = '';
   }
   extensions.push(targetExtension);
   if(this.testPassingFiles || this.testFailingFiles)
@@ -132,6 +154,9 @@ StyleLinter.prototype.processString = function(content, relativePath) {
  var self = this;
  this.linterConfig.code = content;
  this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
+ if(this.ignorer.ignores(this.linterConfig.codeFilename)){
+   return;
+ }
  return stylelint.lint(this.linterConfig).then(function(results){
   //sets the value to relative path otherwise it would be absolute path
   results = self.processResults(results, relativePath);
@@ -145,7 +170,7 @@ StyleLinter.prototype.processString = function(content, relativePath) {
    console.error(chalk.red('======= Something went wrong running stylelint ======='));
    if(err.code === 78){
      if(err.message.indexOf('No configuration provided') > -1){
-       console.error(chalk.red("No stylelint configuration found please create a .stylelintrc file in the route directory"));
+       console.error(chalk.red('No stylelint configuration found please create a .stylelintrc file in the route directory'));
      } else {
        console.error(chalk.red(err.message));
      }
@@ -231,18 +256,18 @@ StyleLinter.prototype.consoleLogger = function(results, relativePath) {
   */
 StyleLinter.prototype.testGenerator = function(relativePath, errors) {
   var assertions = [];
-  var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
+  var module  = 'module('Style Lint');\n';
+  var test = 'test('' + relativePath + ' should pass stylelint', function() {\n';
   if(!errors){
-    var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
-    return module+test+assertion+"\n});\n";
+    var assertion =  '  ok(\'true , '+relativePath+' passed stylelint\');';
+    return module+test+assertion+'\n});\n';
   } else {
     for(var i = 0; i < errors.warnings.length; i++){
       var warning = errors.warnings[i];
       var index = warning.line+':'+warning.column;
-      assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
+      assertions.push('  ok(' + false + ', ''+index +' '+this.escapeErrorString(warning.text)+'');');
     }
-    return module+test+assertions.join('\n')+"\n});\n";
+    return module+test+assertions.join('\n')+'\n});\n';
   }
 };
 
