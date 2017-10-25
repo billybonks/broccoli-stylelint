@@ -6,6 +6,29 @@ var path =             require('path');
 var broccoliNodeInfo = require('broccoli-node-info');
 var chalk            = require('chalk');
 
+
+//Copied from stylelint, until style lint ignores files properly via node api
+function buildIgnorer(){
+  var ignore = require('ignore');
+  var fs = require('fs');
+  var DEFAULT_IGNORE_FILENAME = '.stylelintignore';
+  var FILE_NOT_FOUND_ERROR_CODE = 'ENOENT';
+  // The ignorer will be used to filter file paths after the glob is checked,
+  // before any files are actually read
+  var ignoreFilePath = DEFAULT_IGNORE_FILENAME;
+  var absoluteIgnoreFilePath = path.isAbsolute(ignoreFilePath)
+    ? ignoreFilePath
+    : path.resolve(process.cwd(), ignoreFilePath);
+  var ignoreText = '';
+  try {
+    ignoreText = fs.readFileSync(absoluteIgnoreFilePath, 'utf8');
+  } catch (readError) {
+    if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) throw readError;
+  }
+  return ignore()
+    .add(ignoreText)
+}
+
 function resolveInputDirectory(inputNodes) {
   if (typeof inputNodes === 'string') {
     return inputNodes;
@@ -54,7 +77,7 @@ StyleLinter.prototype.availableOptions = [{name: 'onError'},
 function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
   this.inputNodesDirectory = resolveInputDirectory(inputNodes);
-
+  this.ignorer = buildIgnorer();
   for(var i = 0; i < this.availableOptions.length; i++){
     var option = this.availableOptions[i];
     var name = option.name;
@@ -132,6 +155,9 @@ StyleLinter.prototype.processString = function(content, relativePath) {
  var self = this;
  this.linterConfig.code = content;
  this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
+ if(this.ignorer.ignores(this.linterConfig.codeFilename)){
+   return;
+ }
  return stylelint.lint(this.linterConfig).then(function(results){
   //sets the value to relative path otherwise it would be absolute path
   results = self.processResults(results, relativePath);
