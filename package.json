@@ -41,6 +41,6 @@
     "ignore": "^3.3.6",
     "js-string-escape": "~1.0.1",
     "merge": "~1.2.0",
-    "stylelint": "^v8.2.0"
+    "stylelint": "^8.0.0"
   }
 }
