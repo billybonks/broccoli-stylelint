@@ -9,6 +9,7 @@
   ],
   "main": "index.js",
   "scripts": {
+    "lint": "eslint *.js tests",
     "test": "mocha tests/test"
   },
   "repository": {
@@ -30,6 +31,7 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^1.0.0",
+    "eslint": "^4.17.0",
     "mocha": "^5.0.0",
     "stylelint-selector-bem-pattern": "^2.0.0",
     "walk-sync": "^0.3.1"
