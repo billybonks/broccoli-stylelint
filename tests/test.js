@@ -101,22 +101,22 @@ describe('Broccoli StyleLint Plugin', function() {
       var fakeConsole;
 
       beforeEach(function(){
-        fakeConsole = { log:function(){}}
+        fakeConsole = { log:function(){}};
         chai.spy.on(fakeConsole, 'log');
-      })
+      });
 
       it('should log when log=true', function(){
         return buildAndLint('tests/fixtures/has-errors', {disableConsoleLogging:false, console: fakeConsole}).then(function(){
           expect(fakeConsole.log).to.have.been.called();
         });
-      })
+      });
 
       it('should not log when log=false', function(){
         return buildAndLint('tests/fixtures/has-errors', {log: false,console: fakeConsole}).then(function(){
           expect(fakeConsole.log).to.not.have.been.called();
         });
-      })
-    })
+      });
+    });
 
     describe('StyleLint Configuration', function(){
 
@@ -151,8 +151,8 @@ describe('Broccoli StyleLint Plugin', function() {
         function(){
           expect(spy).to.have.been.called();
         }
-      )
-    })
+      );
+    });
 
     describe('Tests', function () {
 
@@ -167,15 +167,15 @@ describe('Broccoli StyleLint Plugin', function() {
         it('accepted testGenerator property', function() {
           var opt = {
             testGenerator:function(){
-              return 'custom test'
+              return 'custom test';
             }
-          }
-          var test = 'custom test'
+          };
+          var test = 'custom test';
           return expect(buildAndLint('tests/fixtures/no-errors', opt)
                                     .then(walkTestsOutputReadableTree)
                                     .then(readTestFile)
                        ).to.eventually.equal(test);
-        })
+        });
 
         it('generates no tests regardless of other test config when disableTestGeneration is true', function() {
           generatorOptionsTest(3,{disableTestGeneration:true});

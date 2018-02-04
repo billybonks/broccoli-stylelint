@@ -28,7 +28,7 @@ function buildIgnorer(){
     if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) throw readError;
   }
   return ignore()
-    .add(ignoreText)
+    .add(ignoreText);
 }
 
 function resolveInputDirectory(inputNodes) {
