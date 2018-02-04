@@ -1,25 +1,25 @@
-var Filter =           require('broccoli-persistent-filter');
-var escapeString =     require('js-string-escape');
-var stylelint =        require('stylelint');
-var merge =            require('merge');
-var path =             require('path');
-var broccoliNodeInfo = require('broccoli-node-info');
-var chalk            = require('chalk');
+const Filter =           require('broccoli-persistent-filter');
+const escapeString =     require('js-string-escape');
+const stylelint =        require('stylelint');
+const merge =            require('merge');
+const path =             require('path');
+const broccoliNodeInfo = require('broccoli-node-info');
+const chalk            = require('chalk');
 
 
 //Copied from stylelint, until style lint ignores files properly via node api
 function buildIgnorer(){
-  var ignore = require('ignore');
-  var fs = require('fs');
-  var DEFAULT_IGNORE_FILENAME = '.stylelintignore';
-  var FILE_NOT_FOUND_ERROR_CODE = 'ENOENT';
+  let ignore = require('ignore');
+  let fs = require('fs');
+  let DEFAULT_IGNORE_FILENAME = '.stylelintignore';
+  let FILE_NOT_FOUND_ERROR_CODE = 'ENOENT';
   // The ignorer will be used to filter file paths after the glob is checked,
   // before any files are actually read
-  var ignoreFilePath = DEFAULT_IGNORE_FILENAME;
-  var absoluteIgnoreFilePath = path.isAbsolute(ignoreFilePath)
+  let ignoreFilePath = DEFAULT_IGNORE_FILENAME;
+  let absoluteIgnoreFilePath = path.isAbsolute(ignoreFilePath)
     ? ignoreFilePath
     : path.resolve(process.cwd(), ignoreFilePath);
-  var ignoreText = '';
+  let ignoreText = '';
   try {
     ignoreText = fs.readFileSync(absoluteIgnoreFilePath, 'utf8');
   } catch (readError) {
@@ -79,10 +79,10 @@ class StyleLinter extends Filter {
                               {name: 'log', default: true},
                               {name: 'console', default: console}];
 
-    for(var i = 0; i < availableOptions.length; i++){
-      var option = availableOptions[i];
-      var name = option.name;
-      var defaultValue = option.default || this[name];
+    for(let i = 0; i < availableOptions.length; i++){
+      let option = availableOptions[i];
+      let name = option.name;
+      let defaultValue = option.default || this[name];
       this[name] = typeof options[name] === "undefined" ?  defaultValue : options[name];
     }
 
@@ -113,9 +113,9 @@ class StyleLinter extends Filter {
    * @param {string} syntax sass|css|less|sugarss
    */
   setSyntax(config) {
-    var syntax = config.syntax;
-    var extensions = [];
-    var targetExtension;
+    let syntax = config.syntax;
+    let extensions = [];
+    let targetExtension;
     if(!syntax)
       syntax = 'scss';
       this.linterConfig.syntax = syntax;
@@ -151,7 +151,7 @@ class StyleLinter extends Filter {
    * @override
    */
   processString(content, relativePath) {
-  var self = this;
+  let self = this;
   this.linterConfig.code = content;
   this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
   if(this.ignorer.ignores(this.linterConfig.codeFilename)){
@@ -220,7 +220,7 @@ class StyleLinter extends Filter {
     *  }
     */
   processResults(results, relativePath) {
-  var resultsInner = results.results[0];
+  let resultsInner = results.results[0];
   resultsInner.errored = results.errored;
   resultsInner.source = relativePath;
   delete results.results;
@@ -255,16 +255,16 @@ class StyleLinter extends Filter {
     *  Geneartes tests.
     */
   testGenerator(relativePath, errors) {
-    var assertions = [];
-    var module  = "module('Style Lint');\n";
-    var test = "test('" + relativePath + " should pass stylelint', function() {\n";
+    let assertions = [];
+    let module  = "module('Style Lint');\n";
+    let test = "test('" + relativePath + " should pass stylelint', function() {\n";
     if(!errors){
-      var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
+      let assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
       return module+test+assertion+"\n});\n";
     } else {
-      for(var i = 0; i < errors.warnings.length; i++){
-        var warning = errors.warnings[i];
-        var index = warning.line+':'+warning.column;
+      for(let i = 0; i < errors.warnings.length; i++){
+        let warning = errors.warnings[i];
+        let index = warning.line+':'+warning.column;
         assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
       }
       return module+test+assertions.join('\n')+"\n});\n";
