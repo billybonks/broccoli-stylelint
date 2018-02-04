@@ -10,6 +10,9 @@ module.exports = {
   },
   rules: {
     'no-console': 'off',
+    'quotes': ['error', 'single', {
+      'allowTemplateLiterals': true,
+    }],
   },
   overrides: [{
     files: ['tests/**/*.js'],

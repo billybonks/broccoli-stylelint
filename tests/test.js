@@ -1,4 +1,4 @@
-var chaiAsPromised = require("chai-as-promised");
+var chaiAsPromised = require('chai-as-promised');
 var StyleLinter =    require('..');
 var walkSync =       require('walk-sync');
 var broccoli =       require('broccoli');
@@ -120,7 +120,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
     describe('StyleLint Configuration', function(){
 
-      it("doesn't mutate options", function() {
+      it('doesn\'t mutate options', function() {
         function generateTest() { return 'OK!'; }
         var options = {disableTestGeneration:true, testGenerator: generateTest};
         new StyleLinter('', options);
@@ -167,10 +167,10 @@ describe('Broccoli StyleLint Plugin', function() {
         it('accepted testGenerator property', function() {
           var opt = {
             testGenerator:function(){
-              return "custom test"
+              return 'custom test'
             }
           }
-          var test = "custom test"
+          var test = 'custom test'
           return expect(buildAndLint('tests/fixtures/no-errors', opt)
                                     .then(walkTestsOutputReadableTree)
                                     .then(readTestFile)
@@ -223,11 +223,11 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     it('generates correct failing test string', function(){
-      var testAssertion = "module('Style Lint');\n"+
-                          "test('has-errors.scss should pass stylelint', function() {\n"+
-                          "  ok(false, '1:15 Unexpected empty block (block-no-empty)');\n"+
-                          "  ok(false, '6:10 Expected \\\"#000000\\\" to be \\\"black\\\" (color-named)');\n"+
-                          "});\n";
+      var testAssertion = 'module(\'Style Lint\');\n'+
+                          'test(\'has-errors.scss should pass stylelint\', function() {\n'+
+                          '  ok(false, \'1:15 Unexpected empty block (block-no-empty)\');\n'+
+                          '  ok(false, \'6:10 Expected \\"#000000\\" to be \\"black\\" (color-named)\');\n'+
+                          '});\n';
       return expect(buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true})
                                 .then(walkTestsOutputReadableTree)
                                 .then(readTestFile)
@@ -235,10 +235,10 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     it('generates correct passing test string', function(){
-      var passedTestAssertion = "module('Style Lint');\n"+
-                          "test('no-errors.scss should pass stylelint', function() {\n"+
-                          "  ok('true , no-errors.scss passed stylelint');\n"+
-                          "});\n";
+      var passedTestAssertion = 'module(\'Style Lint\');\n'+
+                          'test(\'no-errors.scss should pass stylelint\', function() {\n'+
+                          '  ok(\'true , no-errors.scss passed stylelint\');\n'+
+                          '});\n';
       return expect(buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true})
                                 .then(walkTestsOutputReadableTree)
                                 .then(readTestFile)
