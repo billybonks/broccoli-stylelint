@@ -247,7 +247,7 @@ class StyleLinter extends Filter {
     *
     *  custom console logger
     */
-  consoleLogger(results, relativePath) {
+  consoleLogger(results) {
     this.console.log(results.log);
   }
 
@@ -261,7 +261,7 @@ class StyleLinter extends Filter {
     let module  = "module('Style Lint');\n";
     let test = "test('" + relativePath + " should pass stylelint', function() {\n";
     if(!errors){
-      let assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
+      let assertion =  "  ok('true , "+relativePath+" passed stylelint');";
       return module+test+assertion+"\n});\n";
     } else {
       for(let i = 0; i < errors.warnings.length; i++){
