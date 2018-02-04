@@ -159,7 +159,7 @@ class StyleLinter extends Filter {
     if(this.ignorer.ignores(this.linterConfig.codeFilename)){
       return;
     }
-    return stylelint.lint(this.linterConfig).then(function(results){
+    return stylelint.lint(this.linterConfig).then(results => {
       //sets the value to relative path otherwise it would be absolute path
       results = self.processResults(results, relativePath);
       if(results.errored && self.testFailingFiles) {
@@ -168,7 +168,7 @@ class StyleLinter extends Filter {
         results.output = self.testGenerator(relativePath);
       }
       return results;
-    }).catch(function(err) {
+    }).catch(err => {
       console.error(chalk.red('======= Something went wrong running stylelint ======='));
       if(err.code === 78){
         if(err.message.indexOf('No configuration provided') > -1){
