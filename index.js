@@ -50,17 +50,6 @@ function resolveInputDirectory(inputNodes) {
 StyleLinter.prototype = Object.create(Filter.prototype);
 StyleLinter.prototype.constructor = StyleLinter;
 
-/* Used to extract and delete options from input hash */
-StyleLinter.prototype.availableOptions = [{name: 'onError'},
-                                          {name: 'disableTestGeneration'},
-                                          {name: 'testFailingFiles'},
-                                          {name: 'testPassingFiles'},
-                                          {name: 'testGenerator', default: StyleLinter.prototype.testGenerator},
-                                          {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
-                                          {name: 'linterConfig', default: {}},
-                                          {name: 'log', default: true},
-                                          {name: 'console', default: console}];
-
 /**
  * Creates a new StyleLinter instance.
  * Options
@@ -78,8 +67,20 @@ function StyleLinter(inputNodes, options) {
   this.options = options || {linterConfig:{}};
   this.inputNodesDirectory = resolveInputDirectory(inputNodes);
   this.ignorer = buildIgnorer();
-  for(var i = 0; i < this.availableOptions.length; i++){
-    var option = this.availableOptions[i];
+
+  /* Used to extract and delete options from input hash */
+  const availableOptions = [{name: 'onError'},
+                            {name: 'disableTestGeneration'},
+                            {name: 'testFailingFiles'},
+                            {name: 'testPassingFiles'},
+                            {name: 'testGenerator', default: StyleLinter.prototype.testGenerator},
+                            {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
+                            {name: 'linterConfig', default: {}},
+                            {name: 'log', default: true},
+                            {name: 'console', default: console}];
+
+  for(var i = 0; i < availableOptions.length; i++){
+    var option = availableOptions[i];
     var name = option.name;
     var defaultValue = option.default || this[name];
     this[name] = typeof options[name] === "undefined" ?  defaultValue : options[name];
