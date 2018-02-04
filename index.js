@@ -153,34 +153,34 @@ class StyleLinter extends Filter {
    * @override
    */
   processString(content, relativePath) {
-  let self = this;
-  this.linterConfig.code = content;
-  this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
-  if(this.ignorer.ignores(this.linterConfig.codeFilename)){
-    return;
-  }
-  return stylelint.lint(this.linterConfig).then(function(results){
-    //sets the value to relative path otherwise it would be absolute path
-    results = self.processResults(results, relativePath);
-    if(results.errored && self.testFailingFiles) {
-    results.output = self.testGenerator(relativePath, results);
-    } else if(!results.errored && self.testPassingFiles) {
-      results.output = self.testGenerator(relativePath);
+    let self = this;
+    this.linterConfig.code = content;
+    this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
+    if(this.ignorer.ignores(this.linterConfig.codeFilename)){
+      return;
     }
-    return results;
-  }).catch(function(err) {
-    console.error(chalk.red('======= Something went wrong running stylelint ======='));
-    if(err.code === 78){
-      if(err.message.indexOf('No configuration provided') > -1){
-        console.error(chalk.red("No stylelint configuration found please create a .stylelintrc file in the route directory"));
-      } else {
-        console.error(chalk.red(err.message));
+    return stylelint.lint(this.linterConfig).then(function(results){
+      //sets the value to relative path otherwise it would be absolute path
+      results = self.processResults(results, relativePath);
+      if(results.errored && self.testFailingFiles) {
+      results.output = self.testGenerator(relativePath, results);
+      } else if(!results.errored && self.testPassingFiles) {
+        results.output = self.testGenerator(relativePath);
       }
-    } else {
+      return results;
+    }).catch(function(err) {
+      console.error(chalk.red('======= Something went wrong running stylelint ======='));
+      if(err.code === 78){
+        if(err.message.indexOf('No configuration provided') > -1){
+          console.error(chalk.red("No stylelint configuration found please create a .stylelintrc file in the route directory"));
+        } else {
+          console.error(chalk.red(err.message));
+        }
+      } else {
+        console.error(err.stack);
+      }
       console.error(err.stack);
-    }
-    console.error(err.stack);
-  });
+    });
   }
 
   /**
@@ -222,16 +222,16 @@ class StyleLinter extends Filter {
     *  }
     */
   processResults(results, relativePath) {
-  let resultsInner = results.results[0];
-  resultsInner.errored = results.errored;
-  resultsInner.source = relativePath;
-  delete results.results;
-  results.log = results.output;
-  Object.assign(results, resultsInner);
-  results.source = relativePath;
-  results.output = '';
-  return results;
-  };
+    let resultsInner = results.results[0];
+    resultsInner.errored = results.errored;
+    resultsInner.source = relativePath;
+    delete results.results;
+    results.log = results.output;
+    Object.assign(results, resultsInner);
+    results.source = relativePath;
+    results.output = '';
+    return results;
+  }
 
   /**
     * @method testGenerator
