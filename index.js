@@ -1,3 +1,5 @@
+'use strict';
+
 const Filter =           require('broccoli-persistent-filter');
 const escapeString =     require('js-string-escape');
 const stylelint =        require('stylelint');
