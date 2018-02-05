@@ -28,7 +28,7 @@ function buildIgnorer(){
     if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) throw readError;
   }
   return ignore()
-    .add(ignoreText)
+    .add(ignoreText);
 }
 
 function resolveInputDirectory(inputNodes) {
@@ -85,11 +85,11 @@ class StyleLinter extends Filter {
       let option = availableOptions[i];
       let name = option.name;
       let defaultValue = option.default || this[name];
-      this[name] = typeof options[name] === "undefined" ?  defaultValue : options[name];
+      this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
     }
 
     //TODO:remove this deprecation on v1 release
-    if(typeof options['disableConsoleLogging'] !== "undefined"){
+    if(typeof options['disableConsoleLogging'] !== 'undefined'){
       console.warn('"disableConsoleLogging" propety has been deprecated in favour of "log"');
       this.log = !options['disableConsoleLogging'];
     }
@@ -127,7 +127,7 @@ class StyleLinter extends Filter {
       targetExtension = syntax;
     }
     if(syntax === 'css'){
-      config.syntax = "";
+      config.syntax = '';
     }
     extensions.push(targetExtension);
     if(this.testPassingFiles || this.testFailingFiles)
@@ -172,7 +172,7 @@ class StyleLinter extends Filter {
       console.error(chalk.red('======= Something went wrong running stylelint ======='));
       if(err.code === 78){
         if(err.message.indexOf('No configuration provided') > -1){
-          console.error(chalk.red("No stylelint configuration found please create a .stylelintrc file in the route directory"));
+          console.error(chalk.red('No stylelint configuration found please create a .stylelintrc file in the route directory'));
         } else {
           console.error(chalk.red(err.message));
         }
@@ -247,7 +247,7 @@ class StyleLinter extends Filter {
     *
     *  custom console logger
     */
-  consoleLogger(results, relativePath) {
+  consoleLogger(results) {
     this.console.log(results.log);
   }
 
@@ -258,18 +258,18 @@ class StyleLinter extends Filter {
     */
   testGenerator(relativePath, errors) {
     let assertions = [];
-    let module  = "module('Style Lint');\n";
-    let test = "test('" + relativePath + " should pass stylelint', function() {\n";
+    let module  = 'module(\'Style Lint\');\n';
+    let test = 'test(\'' + relativePath + ' should pass stylelint\', function() {\n';
     if(!errors){
-      let assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
-      return module+test+assertion+"\n});\n";
+      let assertion =  '  ok(\'true , '+relativePath+' passed stylelint\');';
+      return module+test+assertion+'\n});\n';
     } else {
       for(let i = 0; i < errors.warnings.length; i++){
         let warning = errors.warnings[i];
         let index = warning.line+':'+warning.column;
-        assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
+        assertions.push('  ok(' + false + ', \''+index +' '+this.escapeErrorString(warning.text)+'\');');
       }
-      return module+test+assertions.join('\n')+"\n});\n";
+      return module+test+assertions.join('\n')+'\n});\n';
     }
   }
 }
