@@ -10,7 +10,6 @@ var fs =             require('fs');
 chai.use(chaiAsPromised);
 chai.use(spies);
 
-var assert = chai.assert;
 var expect = chai.expect;
 var builder, lintErrors;
 
@@ -28,25 +27,25 @@ describe('Broccoli StyleLint Plugin', function() {
   describe('Broccoli build', function() {
     it('catches errors', function() {
       return buildAndLint('tests/fixtures/has-errors').then(function() {
-        assert.equal(lintErrors[0].warnings.length,2);
+        expect(lintErrors[0].warnings).to.have.lengthOf(2);
       });
     });
 
     it('ignores file specified config', function(){
       return buildAndLint('tests/fixtures/ignore').then(function() {
-        assert.equal(lintErrors.length,0);
+        expect(lintErrors).to.have.lengthOf(0);
       });
     });
 
     it('stylelint plugins work', function(){
       return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(){
-        assert.equal(lintErrors[0].warnings.length,1);
+        expect(lintErrors[0].warnings).to.have.lengthOf(1);
       });
     });
 
     it('returns usefull source name onError', function(){
       return buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}}).then(function(){
-        assert.equal(lintErrors[0].source,'has-error.scss');
+        expect(lintErrors[0].source).to.equal('has-error.scss');
       });
     });
   });
@@ -124,14 +123,14 @@ describe('Broccoli StyleLint Plugin', function() {
         function generateTest() { return 'OK!'; }
         var options = {disableTestGeneration:true, testGenerator: generateTest};
         new StyleLinter('', options);
-        assert.equal(options.testGenerator, generateTest, 'options.testGenerator is intact');
-        assert.equal(options.disableTestGeneration, true, 'options.disableTestGeneration is intact');
+        expect(options.testGenerator, 'options.testGenerator is intact').to.equal(generateTest);
+        expect(options.disableTestGeneration, 'options.disableTestGeneration is intact').to.be.true;
       });
 
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
         var tree = new StyleLinter('', options);
-        assert.equal(tree.linterConfig.files, null);
+        expect(tree.linterConfig.files).to.be.null;
 
       });
 
