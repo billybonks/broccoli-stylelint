@@ -9,8 +9,9 @@
   ],
   "main": "index.js",
   "scripts": {
-    "lint": "eslint *.js tests",
-    "test": "mocha tests/test"
+    "lint": "jest --projects jest-eslint.config.js",
+    "test": "jest",
+    "test:watch": "jest --watchAll --notify"
   },
   "repository": {
     "type": "git",
@@ -28,11 +29,10 @@
   "homepage": "https://github.com/billybonks/broccoli-stylelint#readme",
   "devDependencies": {
     "broccoli": "^0.16.9",
-    "chai": "^4.1.2",
-    "chai-spies": "^1.0.0",
     "co": "^4.6.0",
     "eslint": "^4.17.0",
-    "mocha": "^5.0.0",
+    "jest": "^21.0.0",
+    "jest-runner-eslint": "^0.4.0",
     "stylelint-selector-bem-pattern": "^2.0.0",
     "walk-sync": "^0.3.1"
   },
@@ -47,5 +47,11 @@
   },
   "resolutions": {
     "stylelint-selector-bem-pattern/stylelint": "~8.4.0"
+  },
+  "jest": {
+    "projects": [
+      "<rootDir>/jest-test.config.js",
+      "<rootDir>/jest-eslint.config.js"
+    ]
   }
 }

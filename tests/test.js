@@ -4,14 +4,9 @@ var co = require('co');
 var StyleLinter =    require('..');
 var walkSync =       require('walk-sync');
 var broccoli =       require('broccoli');
-var chai =           require('chai');
-var spies =          require('chai-spies');
 var merge =          require('merge');
 var fs =             require('fs');
 
-chai.use(spies);
-
-var expect = chai.expect;
 var builder, lintErrors;
 
 describe('Broccoli StyleLint Plugin', function() {
@@ -28,22 +23,22 @@ describe('Broccoli StyleLint Plugin', function() {
   describe('Broccoli build', function() {
     it('catches errors', co.wrap(function *() {
       yield buildAndLint('tests/fixtures/has-errors');
-      expect(lintErrors[0].warnings).to.have.lengthOf(2);
+      expect(lintErrors[0].warnings).toHaveLength(2);
     }));
 
     it('ignores file specified config', co.wrap(function *() {
       yield buildAndLint('tests/fixtures/ignore');
-      expect(lintErrors).to.have.lengthOf(0);
+      expect(lintErrors).toHaveLength(0);
     }));
 
     it('stylelint plugins work', co.wrap(function *() {
       yield buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}});
-      expect(lintErrors[0].warnings).to.have.lengthOf(1);
+      expect(lintErrors[0].warnings).toHaveLength(1);
     }));
 
     it('returns usefull source name onError', co.wrap(function *() {
       yield buildAndLint('tests/fixtures/test-plugin', {linterConfig:{syntax:'scss', configFile:'tests/fixtures/.bemTestStylelintrc'}});
-      expect(lintErrors[0].source).to.equal('has-error.scss');
+      expect(lintErrors[0].source).toEqual('has-error.scss');
     }));
   });
 
@@ -53,7 +48,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
       it('uses string formatter by default', function(){
         builder = new StyleLinter('', {});
-        expect(builder.linterConfig.formatter).to.eql('string');
+        expect(builder.linterConfig.formatter).toEqual('string');
       });
 
     });
@@ -63,7 +58,7 @@ describe('Broccoli StyleLint Plugin', function() {
       function assertExtensions(syntax, targetExtension, extensions){
         var options = {linterConfig:{syntax:syntax}};
         builder = new StyleLinter('', options);
-        expect(builder.extensions).to.eql(extensions);
+        expect(builder.extensions).toEqual(extensions);
       }
 
       it('accepts less',function(){
@@ -97,18 +92,17 @@ describe('Broccoli StyleLint Plugin', function() {
       var fakeConsole;
 
       beforeEach(function(){
-        fakeConsole = { log:function(){}};
-        chai.spy.on(fakeConsole, 'log');
+        fakeConsole = { log: jest.fn() };
       });
 
       it('should log when log=true', co.wrap(function *() {
         yield buildAndLint('tests/fixtures/has-errors', {disableConsoleLogging:false, console: fakeConsole});
-        expect(fakeConsole.log).to.have.been.called();
+        expect(fakeConsole.log).toHaveBeenCalled();
       }));
 
       it('should not log when log=false', co.wrap(function *() {
         yield buildAndLint('tests/fixtures/has-errors', {log: false,console: fakeConsole});
-        expect(fakeConsole.log).to.not.have.been.called();
+        expect(fakeConsole.log).not.toHaveBeenCalled();
       }));
     });
 
@@ -118,14 +112,14 @@ describe('Broccoli StyleLint Plugin', function() {
         function generateTest() { return 'OK!'; }
         var options = {disableTestGeneration:true, testGenerator: generateTest};
         new StyleLinter('', options);
-        expect(options.testGenerator, 'options.testGenerator is intact').to.equal(generateTest);
-        expect(options.disableTestGeneration, 'options.disableTestGeneration is intact').to.be.true;
+        expect(options.testGenerator).toBe(generateTest);
+        expect(options.disableTestGeneration).toBe(true);
       });
 
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
         var tree = new StyleLinter('', options);
-        expect(tree.linterConfig.files).to.be.null;
+        expect(tree.linterConfig.files).toBe(null);
 
       });
 
@@ -135,14 +129,14 @@ describe('Broccoli StyleLint Plugin', function() {
       var linterConfig = {syntax:'scss'};
       var options = {linterConfig:linterConfig, disableTestGeneration:true};
       var linter = new StyleLinter('', options);
-      expect(linter.disableTestGeneration).to.equal(true);
-      expect(linter.linterConfig).to.eql(linterConfig);
+      expect(linter.disableTestGeneration).toBe(true);
+      expect(linter.linterConfig).toEqual(linterConfig);
     });
 
     it('accepts a custom logger', co.wrap(function *() {
-      var spy = chai.spy();
+      var spy = jest.fn();
       yield buildAndLint('tests/fixtures/test-generation', {linterConfig:{syntax:'scss'}, log:true, consoleLogger:spy});
-      expect(spy).to.have.been.called();
+      expect(spy).toHaveBeenCalled();
     }));
 
     describe('Tests', function () {
@@ -158,13 +152,13 @@ describe('Broccoli StyleLint Plugin', function() {
 
           let results = yield buildAndLint('tests/fixtures/no-errors', opt);
           let testPaths = walkTestsOutputReadableTree(results);
-          expect(readTestFile(testPaths)).to.equal(test);
+          expect(readTestFile(testPaths)).toBe(test);
         }));
 
         it('generates no tests regardless of other test config when disableTestGeneration is true', co.wrap(function *() {
           let results = yield buildAndLint('tests/fixtures/test-generation', {disableTestGeneration:true});
           let result = walkTestsOutputTree(results);
-          expect(result.length).to.equal(0);
+          expect(result.length).toBe(0);
         }));
       });
 
@@ -175,9 +169,9 @@ describe('Broccoli StyleLint Plugin', function() {
         let content = fs.readFileSync(path).toString();
 
         if (equal) {
-          expect(content).to.equal('');
+          expect(content).toEqual('');
         } else {
-          expect(content).to.not.equal('');
+          expect(content).not.toEqual('');
         }
       });
 
@@ -207,7 +201,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
     it('correctly handles nested folders', co.wrap(function *() {
       let results = yield buildAndLint('tests/fixtures/test-generation', {testFailingFiles:true});
-      return expect(walkTestsOutputTree(results)).to.eql([
+      return expect(walkTestsOutputTree(results)).toEqual([
         'has-errors.stylelint-test.js',
         'nested-dir/has-errors2.stylelint-test.js',
         'nested-dir/no-errors.stylelint-test.js',
@@ -222,7 +216,7 @@ describe('Broccoli StyleLint Plugin', function() {
                           '});\n';
 
       let results = yield buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).to.equal(testAssertion);
+      return expect(readTestFile(walkTestsOutputReadableTree(results))).toBe(testAssertion);
     }));
 
     it('generates correct passing test string', co.wrap(function *() {
@@ -232,7 +226,7 @@ describe('Broccoli StyleLint Plugin', function() {
                                 '});\n';
 
       let results = yield buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).to.equal(passedTestAssertion);
+      return expect(readTestFile(walkTestsOutputReadableTree(results))).toBe(passedTestAssertion);
     }));
   });
 });
