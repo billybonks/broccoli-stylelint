@@ -10,7 +10,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint *.js tests",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watchAll --notify"
   },
   "repository": {
     "type": "git",
