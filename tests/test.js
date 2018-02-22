@@ -1,7 +1,6 @@
 'use strict';
 
 var co = require('co');
-var chaiAsPromised = require('chai-as-promised');
 var StyleLinter =    require('..');
 var walkSync =       require('walk-sync');
 var broccoli =       require('broccoli');
@@ -10,7 +9,6 @@ var spies =          require('chai-spies');
 var merge =          require('merge');
 var fs =             require('fs');
 
-chai.use(chaiAsPromised);
 chai.use(spies);
 
 var expect = chai.expect;
