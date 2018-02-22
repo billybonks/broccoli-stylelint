@@ -29,8 +29,6 @@
   "homepage": "https://github.com/billybonks/broccoli-stylelint#readme",
   "devDependencies": {
     "broccoli": "^0.16.9",
-    "chai": "^4.1.2",
-    "chai-spies": "^1.0.0",
     "co": "^4.6.0",
     "eslint": "^4.17.0",
     "jest": "^21.0.0",
