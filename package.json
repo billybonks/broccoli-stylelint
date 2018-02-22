@@ -44,5 +44,8 @@
     "js-string-escape": "~1.0.1",
     "merge": "~1.2.0",
     "stylelint": "~8.4.0"
+  },
+  "resolutions": {
+    "stylelint-selector-bem-pattern/stylelint": "~8.4.0"
   }
 }
