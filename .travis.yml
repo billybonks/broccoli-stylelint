@@ -14,5 +14,4 @@ install:
   - yarn --no-lockfile
 
 script:
-  - yarn lint
   - yarn test
