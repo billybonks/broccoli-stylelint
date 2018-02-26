@@ -72,10 +72,14 @@ class StyleLinter extends Filter {
     if(options.consoleLogger){
       console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
     }
+    
+    if(options.testingFramework){
+      options.testGenerator = require('./lib/test-generator');
+    }
     /* Used to extract and delete options from input hash */
     const availableOptions = [{name: 'onError'},
                               {name: 'disableTestGeneration'},
-                              {name: 'testingFramework', default: 'qunit'},
+                              {name: 'testingFramework'},
                               {name: 'testFailingFiles'},
                               {name: 'testPassingFiles'},
                               {name: 'testGenerator', default: oldGenerator},
@@ -91,15 +95,12 @@ class StyleLinter extends Filter {
       this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
     }
 
-    if(options['testGenerator'] === oldGenerator){
-      console.warn(
-        ```The old default generator will be removed in 2.0 you can use the new one /lib/testGenerator"
-           specify the testing framewokr you wish to use using (testingFramework), post 2.0 only testing
-           framework will be required
-        ```);
+    //TODO:remove this deprecation on v2 release
+    if(this.testGenerator === oldGenerator){
+      console.warn(`The old default generator will be removed in 2.0. To migrate specify the testingFramework option in 2.0 it will default to qunit`);
     }
 
-    //TODO:remove this deprecation on v1 release
+    //TODO:remove this deprecation on v2 release
     if(typeof options['disableConsoleLogging'] !== 'undefined'){
       console.warn('After 2.0 release "disableConsoleLogging" propety will be removed in favour of "log"');
       this.log = !options['disableConsoleLogging'];
