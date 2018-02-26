@@ -8,6 +8,7 @@ const path             = require('path');
 const broccoliNodeInfo = require('broccoli-node-info');
 const chalk            = require('chalk');
 
+const oldGenerator     = require('./lib/test-generator-old');
 
 //Copied from stylelint, until style lint ignores files properly via node api
 function buildIgnorer(){
@@ -78,7 +79,7 @@ class StyleLinter extends Filter {
                               {name: 'disableTestGeneration'},
                               {name: 'testFailingFiles'},
                               {name: 'testPassingFiles'},
-                              {name: 'testGenerator', default: StyleLinter.prototype.testGenerator},
+                              {name: 'testGenerator', default: oldGenerator},
                               {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
                               {name: 'linterConfig', default: {}},
                               {name: 'log', default: true},
@@ -89,6 +90,14 @@ class StyleLinter extends Filter {
       let name = option.name;
       let defaultValue = option.default || this[name];
       this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
+    }
+
+    if(options['testGenerator'] === oldGenerator){
+      console.warn(
+        ```The old default generator will be removed in 2.0 you can use the new one /lib/testGenerator"
+           specify the testing framewokr you wish to use using (testingFramework), post 2.0 only testing
+           framework will be required
+        ```);
     }
 
     //TODO:remove this deprecation on v1 release
@@ -258,27 +267,6 @@ class StyleLinter extends Filter {
     this.console.log(results.log);
   }
 
-  /**
-    * @method testGenerator
-    *
-    *  Geneartes tests.
-    */
-  testGenerator(relativePath, errors) {
-    let assertions = [];
-    let module  = 'module(\'Style Lint\');\n';
-    let test = 'test(\'' + relativePath + ' should pass stylelint\', function() {\n';
-    if(!errors){
-      let assertion =  '  ok(\'true , '+relativePath+' passed stylelint\');';
-      return module+test+assertion+'\n});\n';
-    } else {
-      for(let i = 0; i < errors.warnings.length; i++){
-        let warning = errors.warnings[i];
-        let index = warning.line+':'+warning.column;
-        assertions.push('  ok(' + false + ', \''+index +' '+this.escapeErrorString(warning.text)+'\');');
-      }
-      return module+test+assertions.join('\n')+'\n});\n';
-    }
-  }
 }
 
 module.exports = StyleLinter;
