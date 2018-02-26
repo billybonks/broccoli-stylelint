@@ -1,7 +1,6 @@
 'use strict';
 
 const Filter           = require('broccoli-persistent-filter');
-const escapeString     = require('js-string-escape');
 const stylelint        = require('stylelint');
 const merge            = require('merge');
 const path             = require('path');
@@ -247,15 +246,6 @@ class StyleLinter extends Filter {
     results.source = relativePath;
     results.output = '';
     return results;
-  }
-
-  /**
-    * @method testGenerator
-    *
-    *  Alias of escapeString for hooks
-    */
-  escapeErrorString() {
-    return escapeString.apply(this, arguments);
   }
 
   /**
