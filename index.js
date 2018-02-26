@@ -7,7 +7,6 @@ const merge            = require('merge');
 const path             = require('path');
 const broccoliNodeInfo = require('broccoli-node-info');
 const chalk            = require('chalk');
-
 const oldGenerator     = require('./lib/test-generator-old');
 
 //Copied from stylelint, until style lint ignores files properly via node api
@@ -77,6 +76,7 @@ class StyleLinter extends Filter {
     /* Used to extract and delete options from input hash */
     const availableOptions = [{name: 'onError'},
                               {name: 'disableTestGeneration'},
+                              {name: 'testingFramework', default: 'qunit'},
                               {name: 'testFailingFiles'},
                               {name: 'testPassingFiles'},
                               {name: 'testGenerator', default: oldGenerator},
