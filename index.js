@@ -1,12 +1,13 @@
 'use strict';
 
-const Filter =           require('broccoli-persistent-filter');
-const escapeString =     require('js-string-escape');
-const stylelint =        require('stylelint');
-const merge =            require('merge');
-const path =             require('path');
+const Filter           = require('broccoli-persistent-filter');
+const escapeString     = require('js-string-escape');
+const stylelint        = require('stylelint');
+const merge            = require('merge');
+const path             = require('path');
 const broccoliNodeInfo = require('broccoli-node-info');
 const chalk            = require('chalk');
+const testGenerators   = require('aot-test-generators');
 
 
 //Copied from stylelint, until style lint ignores files properly via node api
