@@ -7,7 +7,6 @@ const merge            = require('merge');
 const path             = require('path');
 const broccoliNodeInfo = require('broccoli-node-info');
 const chalk            = require('chalk');
-const testGenerators   = require('aot-test-generators');
 
 
 //Copied from stylelint, until style lint ignores files properly via node api
