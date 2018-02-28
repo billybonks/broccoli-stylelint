@@ -118,9 +118,10 @@ class StyleLinter extends Filter {
     let syntax = config.syntax;
     let extensions = [];
     let targetExtension;
-    if(!syntax)
+    if(!syntax){
       syntax = 'scss';
       this.linterConfig.syntax = syntax;
+    }
     if(syntax === 'sugarss') {
       targetExtension = 'sss';
     } else {
@@ -130,8 +131,11 @@ class StyleLinter extends Filter {
       config.syntax = '';
     }
     extensions.push(targetExtension);
-    if(this.testPassingFiles || this.testFailingFiles)
+    if(this.testPassingFiles || this.testFailingFiles) {
       targetExtension = 'stylelint-test.js';
+    } else {
+      console.warn('After 2.0 release if not tests are disabled, broccoli-stylelint will not return the original files');
+    }
     this.extensions = extensions;
     this.targetExtension = targetExtension;
   }
