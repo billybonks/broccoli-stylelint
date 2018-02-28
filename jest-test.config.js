@@ -4,5 +4,5 @@ module.exports = {
   watchPathIgnorePatterns: ['<rootDir>/tmp'],
   testPathIgnorePatterns: ['tmp', 'node_modules'],
   coverageDirectory: 'coverage',
-  coverageFormats: ['lcov']
+  coverageReporters: ['lcov']
 };
