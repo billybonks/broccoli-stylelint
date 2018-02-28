@@ -99,7 +99,7 @@ class StyleLinter extends Filter {
 
     //TODO:remove this deprecation on v2 release
     if(this.testGenerator === oldGenerator){
-      console.warn(`The old default generator will be removed in 2.0. To migrate specify the testingFramework option in 2.0 it will default to qunit`);
+      console.warn(`After 2.0 the default test generator will be removed in favour of a standard one, To migrate specify the "testingFramework" option in 2.0 it will default to qunit`);
     }
 
     //TODO:remove this deprecation on v2 release
