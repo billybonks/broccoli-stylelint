@@ -90,7 +90,7 @@ class StyleLinter extends Filter {
 
     //TODO:remove this deprecation on v1 release
     if(typeof options['disableConsoleLogging'] !== 'undefined'){
-      console.warn('"disableConsoleLogging" propety has been deprecated in favour of "log"');
+      console.warn('After 2.0 release "disableConsoleLogging" propety will be removed in favour of "log"');
       this.log = !options['disableConsoleLogging'];
     }
 
