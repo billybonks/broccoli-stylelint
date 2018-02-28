@@ -13,6 +13,7 @@ module.exports = {
     'quotes': ['error', 'single', {
       'allowTemplateLiterals': true,
     }],
+    'curly': 'error',
     'semi': ['error', 'always'],
   },
   overrides: [{

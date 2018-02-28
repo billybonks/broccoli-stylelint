@@ -24,7 +24,9 @@ function buildIgnorer(){
   try {
     ignoreText = fs.readFileSync(absoluteIgnoreFilePath, 'utf8');
   } catch (readError) {
-    if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) throw readError;
+    if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) {
+      throw readError;
+    }
   }
   return ignore()
     .add(ignoreText);
@@ -72,7 +74,7 @@ class StyleLinter extends Filter {
     if(options.consoleLogger){
       console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
     }
-    
+
     if(options.testingFramework){
       options.testGenerator = require('./lib/test-generator');
     }
@@ -212,8 +214,10 @@ class StyleLinter extends Filter {
         if(this.onError) {
         this.onError(results);
         }
-        if(this.log)
-        this.consoleLogger(results, relativePath);
+        if(this.log) {
+          this.consoleLogger(results, relativePath);
+        }
+
       }
       return results;
     } else {
