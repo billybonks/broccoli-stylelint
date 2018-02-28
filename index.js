@@ -1,13 +1,12 @@
 'use strict';
 
 const Filter           = require('broccoli-persistent-filter');
-const escapeString     = require('js-string-escape');
 const stylelint        = require('stylelint');
 const merge            = require('merge');
 const path             = require('path');
 const broccoliNodeInfo = require('broccoli-node-info');
 const chalk            = require('chalk');
-
+const oldGenerator     = require('./lib/test-generator-old');
 
 //Copied from stylelint, until style lint ignores files properly via node api
 function buildIgnorer(){
@@ -73,12 +72,17 @@ class StyleLinter extends Filter {
     if(options.consoleLogger){
       console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
     }
+    
+    if(options.testingFramework){
+      options.testGenerator = require('./lib/test-generator');
+    }
     /* Used to extract and delete options from input hash */
     const availableOptions = [{name: 'onError'},
                               {name: 'disableTestGeneration'},
+                              {name: 'testingFramework'},
                               {name: 'testFailingFiles'},
                               {name: 'testPassingFiles'},
-                              {name: 'testGenerator', default: StyleLinter.prototype.testGenerator},
+                              {name: 'testGenerator', default: oldGenerator},
                               {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
                               {name: 'linterConfig', default: {}},
                               {name: 'log', default: true},
@@ -91,7 +95,12 @@ class StyleLinter extends Filter {
       this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
     }
 
-    //TODO:remove this deprecation on v1 release
+    //TODO:remove this deprecation on v2 release
+    if(this.testGenerator === oldGenerator){
+      console.warn(`The old default generator will be removed in 2.0. To migrate specify the testingFramework option in 2.0 it will default to qunit`);
+    }
+
+    //TODO:remove this deprecation on v2 release
     if(typeof options['disableConsoleLogging'] !== 'undefined'){
       console.warn('After 2.0 release "disableConsoleLogging" propety will be removed in favour of "log"');
       this.log = !options['disableConsoleLogging'];
@@ -241,15 +250,6 @@ class StyleLinter extends Filter {
   }
 
   /**
-    * @method testGenerator
-    *
-    *  Alias of escapeString for hooks
-    */
-  escapeErrorString() {
-    return escapeString.apply(this, arguments);
-  }
-
-  /**
     * @method consoleLogger
     *
     *  custom console logger
@@ -258,27 +258,6 @@ class StyleLinter extends Filter {
     this.console.log(results.log);
   }
 
-  /**
-    * @method testGenerator
-    *
-    *  Geneartes tests.
-    */
-  testGenerator(relativePath, errors) {
-    let assertions = [];
-    let module  = 'module(\'Style Lint\');\n';
-    let test = 'test(\'' + relativePath + ' should pass stylelint\', function() {\n';
-    if(!errors){
-      let assertion =  '  ok(\'true , '+relativePath+' passed stylelint\');';
-      return module+test+assertion+'\n});\n';
-    } else {
-      for(let i = 0; i < errors.warnings.length; i++){
-        let warning = errors.warnings[i];
-        let index = warning.line+':'+warning.column;
-        assertions.push('  ok(' + false + ', \''+index +' '+this.escapeErrorString(warning.text)+'\');');
-      }
-      return module+test+assertions.join('\n')+'\n});\n';
-    }
-  }
 }
 
 module.exports = StyleLinter;

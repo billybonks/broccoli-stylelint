@@ -108,6 +108,20 @@ describe('Broccoli StyleLint Plugin', function() {
 
     describe('StyleLint Configuration', function(){
 
+      describe('testGenerator deprecation', function(){
+        it('uses new geneator if testingFramework key is present', function() {
+          var options = {testingFramework:'qunit'};
+          let linter = new StyleLinter('', options);
+          expect(linter.testGenerator).toEqual(require('../lib/test-generator'));
+        });
+
+        it('uses old geneator if testingFramework key is not present', function() {
+          let linter = new StyleLinter('', {});
+          expect(linter.testGenerator).toEqual(require('../lib/test-generator-old'));
+        });
+      });
+
+
       it('doesn\'t mutate options', function() {
         function generateTest() { return 'OK!'; }
         var options = {disableTestGeneration:true, testGenerator: generateTest};
