@@ -70,6 +70,9 @@ class StyleLinter extends Filter {
     this.inputNodesDirectory = resolveInputDirectory(inputNodes);
     this.ignorer = buildIgnorer();
 
+    if(options.consoleLogger){
+      console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
+    }
     /* Used to extract and delete options from input hash */
     const availableOptions = [{name: 'onError'},
                               {name: 'disableTestGeneration'},
