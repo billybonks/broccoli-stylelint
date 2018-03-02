@@ -2,7 +2,6 @@
 
 const Filter           = require('broccoli-persistent-filter');
 const stylelint        = require('stylelint');
-const merge            = require('merge');
 const path             = require('path');
 const broccoliNodeInfo = require('broccoli-node-info');
 const chalk            = require('chalk');
@@ -78,6 +77,7 @@ class StyleLinter extends Filter {
     if(options.testingFramework){
       options.testGenerator = require('./lib/test-generator');
     }
+
     /* Used to extract and delete options from input hash */
     const availableOptions = [{name: 'onError'},
                               {name: 'disableTestGeneration'},
@@ -97,6 +97,8 @@ class StyleLinter extends Filter {
       this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
     }
 
+
+    this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
     //TODO:remove this deprecation on v2 release
     if(this.testGenerator === oldGenerator){
       console.warn(`After 2.0 the default test generator will be removed in favour of a standard one, To migrate specify the "testingFramework" option in 2.0 it will default to qunit`);
@@ -107,10 +109,6 @@ class StyleLinter extends Filter {
       console.warn('After 2.0 release "disableConsoleLogging" propety will be removed in favour of "log"');
       this.log = !options['disableConsoleLogging'];
     }
-
-    merge(this.linterConfig, {
-      formatter: 'string'
-    });
 
     if(typeof this.testFailingFiles === 'undefined' && typeof this.testPassingFiles === 'undefined' && typeof this.disableTestGeneration === 'undefined'){
       this.testFailingFiles = true;
@@ -212,12 +210,11 @@ class StyleLinter extends Filter {
     if(results) {
       if(results.errored){
         if(this.onError) {
-        this.onError(results);
+          this.onError(results);
         }
         if(this.log) {
           this.consoleLogger(results, relativePath);
         }
-
       }
       return results;
     } else {
