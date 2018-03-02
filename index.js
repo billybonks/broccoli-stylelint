@@ -74,54 +74,58 @@ class StyleLinter extends Filter {
       console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
     }
 
-    if(options.testingFramework){
-      options.testGenerator = require('./lib/test-generator');
-    }
+    this.compileOptions(options);
+    this.setSyntax(this.linterConfig);
 
-    /* Used to extract and delete options from input hash */
-    const availableOptions = [{name: 'onError'},
-                              {name: 'disableTestGeneration'},
-                              {name: 'testingFramework'},
-                              {name: 'testFailingFiles'},
-                              {name: 'testPassingFiles'},
-                              {name: 'testGenerator', default: oldGenerator},
-                              {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
-                              {name: 'linterConfig', default: {}},
-                              {name: 'log', default: true},
-                              {name: 'console', default: console}];
-
-    for(let i = 0; i < availableOptions.length; i++){
-      let option = availableOptions[i];
-      let name = option.name;
-      let defaultValue = option.default || this[name];
-      this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
-    }
-
-
-    this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
-    //TODO:remove this deprecation on v2 release
-    if(this.testGenerator === oldGenerator){
-      console.warn(`After 2.0 the default test generator will be removed in favour of a standard one, To migrate specify the "testingFramework" option in 2.0 it will default to qunit`);
-    }
-
-    //TODO:remove this deprecation on v2 release
     if(typeof options['disableConsoleLogging'] !== 'undefined'){
       console.warn('After 2.0 release "disableConsoleLogging" propety will be removed in favour of "log"');
       this.log = !options['disableConsoleLogging'];
     }
 
-    if(typeof this.testFailingFiles === 'undefined' && typeof this.testPassingFiles === 'undefined' && typeof this.disableTestGeneration === 'undefined'){
-      this.testFailingFiles = true;
-      this.testPassingFiles = true;
-    }else if( typeof this.disableTestGeneration !== 'undefined' ){
-      this.testFailingFiles = typeof this.testFailingFiles === 'undefined' ? !this.disableTestGeneration : this.testFailingFiles;
-      this.testPassingFiles  = typeof this.testPassingFiles === 'undefined' ? !this.disableTestGeneration : this.testPassingFiles;
+    //TODO:remove this deprecation on v2 release
+    if(this.testGenerator === oldGenerator){
+      console.warn(`After 2.0 the default test generator will be removed in favour of a standard one, To migrate specify the "testingFramework" option in 2.0 it will default to qunit`);
     }
-    this.linterConfig.files = null;
 
-    this.setSyntax(this.linterConfig);
+
   }
 
+  compileOptions(options){
+        if(options.testingFramework){
+          options.testGenerator = require('./lib/test-generator');
+        }
+
+        /* Used to extract and delete options from input hash */
+        const availableOptions = [{name: 'onError'},
+                                  {name: 'disableTestGeneration'},
+                                  {name: 'testingFramework'},
+                                  {name: 'testFailingFiles'},
+                                  {name: 'testPassingFiles'},
+                                  {name: 'testGenerator', default: oldGenerator},
+                                  {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
+                                  {name: 'linterConfig', default: {}},
+                                  {name: 'log', default: true},
+                                  {name: 'console', default: console}];
+
+        for(let i = 0; i < availableOptions.length; i++){
+          let option = availableOptions[i];
+          let name = option.name;
+          let defaultValue = option.default || this[name];
+          this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
+        }
+
+        if(typeof this.testFailingFiles === 'undefined' && typeof this.testPassingFiles === 'undefined' && typeof this.disableTestGeneration === 'undefined'){
+          this.testFailingFiles = true;
+          this.testPassingFiles = true;
+        }else if( typeof this.disableTestGeneration !== 'undefined' ){
+          this.testFailingFiles = typeof this.testFailingFiles === 'undefined' ? !this.disableTestGeneration : this.testFailingFiles;
+          this.testPassingFiles  = typeof this.testPassingFiles === 'undefined' ? !this.disableTestGeneration : this.testPassingFiles;
+        }
+
+        this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
+        this.linterConfig.files = null;
+
+  }
   /**
    * Sets the, file extensions that the broccoli plugin must parse
    * @param {string} syntax sass|css|less|sugarss
