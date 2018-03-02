@@ -78,6 +78,7 @@ class StyleLinter extends Filter {
     if(options.testingFramework){
       options.testGenerator = require('./lib/test-generator');
     }
+
     /* Used to extract and delete options from input hash */
     const availableOptions = [{name: 'onError'},
                               {name: 'disableTestGeneration'},
@@ -212,12 +213,11 @@ class StyleLinter extends Filter {
     if(results) {
       if(results.errored){
         if(this.onError) {
-        this.onError(results);
+          this.onError(results);
         }
         if(this.log) {
           this.consoleLogger(results, relativePath);
         }
-
       }
       return results;
     } else {
