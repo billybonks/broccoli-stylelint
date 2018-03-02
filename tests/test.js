@@ -140,7 +140,7 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     it('sets options on object', function(){
-      var linterConfig = {syntax:'scss'};
+      var linterConfig = {files: null, formatter: 'string', syntax: 'scss'};
       var options = {linterConfig:linterConfig, disableTestGeneration:true};
       var linter = new StyleLinter('', options);
       expect(linter.disableTestGeneration).toBe(true);
