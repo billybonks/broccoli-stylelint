@@ -1,3 +1,5 @@
+'use strict';
+
 const BroccoliStylelint = require('../index');
 
 describe('broccoli-stylelint', () => {
