@@ -47,7 +47,7 @@ describe('Broccoli StyleLint Plugin', function() {
     describe('Formatter', function(){
 
       it('uses string formatter by default', function(){
-        builder = new StyleLinter('', {});
+        builder = StyleLinter.create('', {});
         expect(builder.linterConfig.formatter).toEqual('string');
       });
 
@@ -57,7 +57,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
       function assertExtensions(syntax, targetExtension, extensions){
         var options = {linterConfig:{syntax:syntax}};
-        builder = new StyleLinter('', options);
+        builder = StyleLinter.create('', options);
         expect(builder.extensions).toEqual(extensions);
       }
 
@@ -111,12 +111,12 @@ describe('Broccoli StyleLint Plugin', function() {
       describe('testGenerator deprecation', function(){
         it('uses new geneator if testingFramework key is present', function() {
           var options = {testingFramework:'qunit'};
-          let linter = new StyleLinter('', options);
+          let linter = StyleLinter.create('', options);
           expect(linter.testGenerator).toEqual(require('../lib/test-generator'));
         });
 
         it('uses old geneator if testingFramework key is not present', function() {
-          let linter = new StyleLinter('', {});
+          let linter = StyleLinter.create('', {});
           expect(linter.testGenerator).toEqual(require('../lib/test-generator-old'));
         });
       });
@@ -125,14 +125,14 @@ describe('Broccoli StyleLint Plugin', function() {
       it('doesn\'t mutate options', function() {
         function generateTest() { return 'OK!'; }
         var options = {disableTestGeneration:true, testGenerator: generateTest};
-        new StyleLinter('', options);
+        StyleLinter.create('', options);
         expect(options.testGenerator).toBe(generateTest);
         expect(options.disableTestGeneration).toBe(true);
       });
 
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
-        var tree = new StyleLinter('', options);
+        var tree = StyleLinter.create('', options);
         expect(tree.linterConfig.files).toBe(null);
 
       });
@@ -142,7 +142,7 @@ describe('Broccoli StyleLint Plugin', function() {
     it('sets options on object', function(){
       var linterConfig = {files: null, formatter: 'string', syntax: 'scss'};
       var options = {linterConfig:linterConfig, disableTestGeneration:true};
-      var linter = new StyleLinter('', options);
+      var linter = StyleLinter.create('', options);
       expect(linter.disableTestGeneration).toBe(true);
       expect(linter.linterConfig).toEqual(linterConfig);
     });
@@ -270,7 +270,7 @@ function buildAndLint(sourcePath, options) {
     lintErrors.push(results);
   };
 
-  var tree = new StyleLinter(sourcePath, options);
+  var tree = StyleLinter.create(sourcePath, options);
   builder = new broccoli.Builder(tree);
 
   return builder.build();

@@ -1,11 +1,13 @@
+/*eslint-env es6*/
 'use strict';
 
-const Filter           = require('broccoli-persistent-filter');
-const stylelint        = require('stylelint');
-const path             = require('path');
-const broccoliNodeInfo = require('broccoli-node-info');
-const chalk            = require('chalk');
-const oldGenerator     = require('./lib/test-generator-old');
+const Filter              = require('broccoli-persistent-filter');
+const stylelint           = require('stylelint');
+const path                = require('path');
+const broccoliNodeInfo    = require('broccoli-node-info');
+const chalk               = require('chalk');
+const oldGenerator        = require('./lib/test-generator-old');
+const FACTORY_METHOD_USED = Symbol('create() factory method was used');
 
 //Copied from stylelint, until style lint ignores files properly via node api
 function buildIgnorer(){
@@ -70,6 +72,11 @@ class StyleLinter extends Filter {
     this.inputNodesDirectory = resolveInputDirectory(inputNodes);
     this.ignorer = buildIgnorer();
 
+    if (!options[FACTORY_METHOD_USED]) {
+       console.warn('[broccoli-stylelint] DEPRECATION: Please use the create() factory method instead of ' +
+         'calling Stylelint() directly or using new Stylelint()');
+     }
+
     if(options.consoleLogger){
       console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
     }
@@ -88,6 +95,13 @@ class StyleLinter extends Filter {
     }
 
 
+  }
+
+  static create(inputNode, _options){
+    let options = Object.assign({}, _options, {
+      [FACTORY_METHOD_USED]: true
+    });
+    return new this(inputNode, options);
   }
 
   compileOptions(options){
