@@ -6,7 +6,6 @@ const stylelint           = require('stylelint');
 const path                = require('path');
 const broccoliNodeInfo    = require('broccoli-node-info');
 const chalk               = require('chalk');
-const oldGenerator        = require('./lib/test-generator-old');
 const FACTORY_METHOD_USED = Symbol('create() factory method was used');
 
 //Copied from stylelint, until style lint ignores files properly via node api
@@ -66,6 +65,7 @@ class StyleLinter extends Filter {
    * @class
    */
   constructor(inputNodes, options) {
+
     super(inputNodes, options);
 
     this.options = options || {linterConfig:{}};
@@ -77,24 +77,8 @@ class StyleLinter extends Filter {
          'calling Stylelint() directly or using new Stylelint()');
      }
 
-    if(options.consoleLogger){
-      console.warn('After 2.0 release "consoleLogger" propety will be removed in favour of stylelint formatter option');
-    }
-
     this.compileOptions(options);
     this.setSyntax(this.linterConfig);
-
-    if(typeof options['disableConsoleLogging'] !== 'undefined'){
-      console.warn('After 2.0 release "disableConsoleLogging" propety will be removed in favour of "log"');
-      this.log = !options['disableConsoleLogging'];
-    }
-
-    //TODO:remove this deprecation on v2 release
-    if(this.testGenerator === oldGenerator){
-      console.warn(`After 2.0 the default test generator will be removed in favour of a standard one, To migrate specify the "testingFramework" option in 2.0 it will default to qunit`);
-    }
-
-
   }
 
   static create(inputNode, _options){
@@ -105,18 +89,13 @@ class StyleLinter extends Filter {
   }
 
   compileOptions(options){
-        if(options.testingFramework){
-          options.testGenerator = require('./lib/test-generator');
-        }
-
         /* Used to extract and delete options from input hash */
         const availableOptions = [{name: 'onError'},
                                   {name: 'disableTestGeneration'},
-                                  {name: 'testingFramework'},
+                                  {name: 'testingFramework', default:'qunit'},
                                   {name: 'testFailingFiles'},
                                   {name: 'testPassingFiles'},
-                                  {name: 'testGenerator', default: oldGenerator},
-                                  {name: 'consoleLogger', default: StyleLinter.prototype.consoleLogger},
+                                  {name: 'testGenerator', default: require('./lib/test-generator')},
                                   {name: 'linterConfig', default: {}},
                                   {name: 'log', default: true},
                                   {name: 'console', default: console}];
@@ -127,7 +106,6 @@ class StyleLinter extends Filter {
           let defaultValue = option.default || this[name];
           this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
         }
-
         if(typeof this.testFailingFiles === 'undefined' && typeof this.testPassingFiles === 'undefined' && typeof this.disableTestGeneration === 'undefined'){
           this.testFailingFiles = true;
           this.testPassingFiles = true;
@@ -136,9 +114,11 @@ class StyleLinter extends Filter {
           this.testPassingFiles  = typeof this.testPassingFiles === 'undefined' ? !this.disableTestGeneration : this.testPassingFiles;
         }
 
+        if(this.testPassingFiles || this.testFailingFiles){
+          this.targetExtension = 'stylelint-test.js' ;
+        }
         this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
         this.linterConfig.files = null;
-
   }
   /**
    * Sets the, file extensions that the broccoli plugin must parse
@@ -161,13 +141,7 @@ class StyleLinter extends Filter {
       config.syntax = '';
     }
     extensions.push(targetExtension);
-    if(this.testPassingFiles || this.testFailingFiles) {
-      targetExtension = 'stylelint-test.js';
-    } else {
-      console.warn('After 2.0 release if not tests are disabled, broccoli-stylelint will not return the original files');
-    }
     this.extensions = extensions;
-    this.targetExtension = targetExtension;
   }
 
   /** Filter Class Overrides **/
@@ -197,11 +171,13 @@ class StyleLinter extends Filter {
       //sets the value to relative path otherwise it would be absolute path
       results = self.processResults(results, relativePath);
       if(results.errored && self.testFailingFiles) {
-      results.output = self.testGenerator(relativePath, results);
+        results.output = self.testGenerator(relativePath, results, this.testingFramework);
+        return results;
       } else if(!results.errored && self.testPassingFiles) {
-        results.output = self.testGenerator(relativePath);
+        results.output = self.testGenerator(relativePath, results, this.testingFramework);
+        return results;
       }
-      return results;
+      return '';
     }).catch(err => {
       console.error(chalk.red('======= Something went wrong running stylelint ======='));
       if(err.code === 78){
@@ -224,14 +200,14 @@ class StyleLinter extends Filter {
     *  - Generate tests
     * @override
     */
-  postProcess(results, relativePath) {
+  postProcess(results) {
     if(results) {
       if(results.errored){
         if(this.onError) {
           this.onError(results);
         }
         if(this.log) {
-          this.consoleLogger(results, relativePath);
+          this.console.log(results.log);
         }
       }
       return results;
@@ -266,15 +242,6 @@ class StyleLinter extends Filter {
     results.source = relativePath;
     results.output = '';
     return results;
-  }
-
-  /**
-    * @method consoleLogger
-    *
-    *  custom console logger
-    */
-  consoleLogger(results) {
-    this.console.log(results.log);
   }
 
 }

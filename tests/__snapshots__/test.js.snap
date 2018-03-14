@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Broccoli StyleLint Plugin Generated Tests generates correct failing test string 1`] = `
+"QUnit.module('Stylelint');
+QUnit.test('has-errors.scss should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n6:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
+});
+"
+`;
+
+exports[`Broccoli StyleLint Plugin Generated Tests generates correct passing test string 1`] = `
+"QUnit.module('Stylelint');
+QUnit.test('no-errors.scss should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, 'no-errors.scss should pass stylelint');
+});
+"
+`;
