@@ -96,7 +96,7 @@ describe('Broccoli StyleLint Plugin', function() {
       });
 
       it('should log when log=true', co.wrap(function *() {
-        yield buildAndLint('tests/fixtures/has-errors', {disableConsoleLogging:false, console: fakeConsole});
+        yield buildAndLint('tests/fixtures/has-errors', {log:true, console: fakeConsole});
         expect(fakeConsole.log).toHaveBeenCalled();
       }));
 
@@ -113,11 +113,6 @@ describe('Broccoli StyleLint Plugin', function() {
           var options = {testingFramework:'qunit'};
           let linter = StyleLinter.create('', options);
           expect(linter.testGenerator).toEqual(require('../lib/test-generator'));
-        });
-
-        it('uses old geneator if testingFramework key is not present', function() {
-          let linter = StyleLinter.create('', {});
-          expect(linter.testGenerator).toEqual(require('../lib/test-generator-old'));
         });
       });
 
@@ -146,12 +141,6 @@ describe('Broccoli StyleLint Plugin', function() {
       expect(linter.disableTestGeneration).toBe(true);
       expect(linter.linterConfig).toEqual(linterConfig);
     });
-
-    it('accepts a custom logger', co.wrap(function *() {
-      var spy = jest.fn();
-      yield buildAndLint('tests/fixtures/test-generation', {linterConfig:{syntax:'scss'}, log:true, consoleLogger:spy});
-      expect(spy).toHaveBeenCalled();
-    }));
 
     describe('Tests', function () {
 
@@ -223,24 +212,13 @@ describe('Broccoli StyleLint Plugin', function() {
     }));
 
     it('generates correct failing test string', co.wrap(function *() {
-      var testAssertion = 'module(\'Style Lint\');\n'+
-                          'test(\'has-errors.scss should pass stylelint\', function() {\n'+
-                          '  ok(false, \'1:15 Unexpected empty block (block-no-empty)\');\n'+
-                          '  ok(false, \'6:10 Expected \\"#000000\\" to be \\"black\\" (color-named)\');\n'+
-                          '});\n';
-
       let results = yield buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).toBe(testAssertion);
+      return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
     }));
 
     it('generates correct passing test string', co.wrap(function *() {
-      var passedTestAssertion = 'module(\'Style Lint\');\n'+
-                                'test(\'no-errors.scss should pass stylelint\', function() {\n'+
-                                '  ok(\'true , no-errors.scss passed stylelint\');\n'+
-                                '});\n';
-
       let results = yield buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).toBe(passedTestAssertion);
+      return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
     }));
   });
 });
