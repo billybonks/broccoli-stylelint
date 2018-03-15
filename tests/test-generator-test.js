@@ -42,6 +42,7 @@ QUnit.test('no-errors.scss should pass stylelint', function(assert) {
 const frameworks = ['qunit', 'mocha'];
 const generator = require('../lib/test-generator');
 const errors = require('./fixtures/errors');
+const noErrors = require('./fixtures/no-errors');
 
 describe('test-generator', function() {
   describe('errors is defined', function() {
@@ -52,7 +53,7 @@ describe('test-generator', function() {
           expect(results).toEqual(outputs[framework].errored);
         });
         it('generates correct passed test', function(){
-          let results = generator('no-errors.scss', null, framework);
+          let results = generator('no-errors.scss', noErrors, framework);
           expect(results).toEqual(outputs[framework].passed);
         });
       });
