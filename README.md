@@ -6,8 +6,6 @@ Broccoli Style Lint
 =====
 Add [stylelint](http://stylelint.io/) to your broccoli build pipeline with ease.
 
-**Currently doesn't support ignored files configuration**
-
 Installation
 ====
 `npm install --save-dev broccoli-stylelint`
@@ -26,7 +24,7 @@ var node = new StyleLint('app/styles');
 
 the default output will be the same SCSS files, in the same tree structure.
 
-###Tests
+### Tests
 
 Tests are automatically generated
 
@@ -60,34 +58,11 @@ new Funnel(node, {
 });
 ```
 
-If test generation is disabled the plugin will return the original tree
-
 ** Disable test generation **
 set the option `disableTestGeneration:true`
 
 `var node = new StyleLint('app/styles', {disableTestGeneration:true});`
 
-** Custom test generator **
-If you want to build your own test generator set the `testGenerator` option to a function that will generate the tests
-
-```javascript
-StyleLinter.prototype.testGenerator = function(relativePath, errors) {
-  var assertions = [];
-  var module  = "module('Style Lint');\n";
-  var test = "test('" + relativePath + " should pass stylelint', function() {\n";
-  if(!errors){
-    var assertion =  "  ok(\'true , "+relativePath+" passed stylelint\');";
-    return module+test+assertion+"\n});\n";
-  } else {
-    for(var i = 0; i < errors.warnings.length; i++){
-      var warning = errors.warnings[i];
-      var index = warning.line+':'+warning.column;
-      assertions.push("  ok(" + false + ", '"+index +" "+this.escapeErrorString(warning.text)+"');");
-    }
-    return module+test+assertions.join('\n')+"\n});\n";
-  }
-};
-```
 
 Configuration
 =====
@@ -103,7 +78,7 @@ doesn't accept `files` option
 A hook that allows you to do whatever you want, when an error occurs
  - errors `array of errors`
 
-`testGenerator(relativePath, errors)` {function}
+`testGenerator(relativePath, results, testingFramework)` {function}
 
 A hook that allows you generate tests.
  - relativePath `path of currently linted file`
@@ -121,9 +96,8 @@ If true it  will generate a unit test if the passes fails lint.
 
 Will disable generation of tests
 
-`disableConsoleLogging` {boolean}
-
-If true it will disable logging of errors to console
+`testingFramework` {string}
+supports `'qunit'` or `'mocha'`
 
 `log` {boolean}
 If true it will log results to console
