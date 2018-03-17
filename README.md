@@ -13,7 +13,7 @@ Installation
 Usage
 =====
 
-###Basic
+### Basic
 
 ```javascript
 var StyleLint = require('broccoli-stylelint');
