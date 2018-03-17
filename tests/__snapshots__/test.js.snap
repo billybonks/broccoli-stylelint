@@ -13,7 +13,7 @@ exports[`Broccoli StyleLint Plugin Generated Tests generates correct passing tes
 "QUnit.module('Stylelint');
 QUnit.test('no-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
-  assert.ok(false, 'no-errors.scss should pass stylelint');
+  assert.ok(true, 'no-errors.scss should pass stylelint');
 });
 "
 `;

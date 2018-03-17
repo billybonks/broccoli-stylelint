@@ -1,4 +1,5 @@
 module.exports = {
+  errored: true,
   warnings:
    [ { line: 1,
        column: 15,
