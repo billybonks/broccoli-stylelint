@@ -31,7 +31,7 @@
     "broccoli": "^0.16.9",
     "co": "^4.6.0",
     "eslint": "^4.17.0",
-    "jest": "^21.0.0",
+    "jest": "^22.4.4",
     "jest-runner-eslint": "^0.4.0",
     "stylelint-selector-bem-pattern": "^2.0.0",
     "walk-sync": "^0.3.1",
