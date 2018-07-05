@@ -1,29 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`test-generator errors is defined mocha generates correct errored test 1`] = `
-"describe('Stylelint: has-errors.scss', function() {
-  it('has-errors.scss should pass stylelint', function() {
+"  it('has-errors.scss should pass stylelint', function() {
     // test failed
     var error = new chai.AssertionError('1:15 Unexpected empty block (block-no-empty)\\\\n6:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
     error.stack = undefined;
     throw error;
   });
-});
 "
 `;
 
 exports[`test-generator errors is defined mocha generates correct passed test 1`] = `
-"describe('Stylelint: no-errors.scss', function() {
-  it('no-errors.scss should pass stylelint', function() {
+"  it('no-errors.scss should pass stylelint', function() {
     // test passed
   });
-});
 "
 `;
 
 exports[`test-generator errors is defined qunit generates correct errored test 1`] = `
-"QUnit.module('Stylelint: has-errors.scss');
-QUnit.test('has-errors.scss should pass stylelint', function(assert) {
+"QUnit.test('has-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n6:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
 });
@@ -31,8 +26,7 @@ QUnit.test('has-errors.scss should pass stylelint', function(assert) {
 `;
 
 exports[`test-generator errors is defined qunit generates correct passed test 1`] = `
-"QUnit.module('Stylelint: no-errors.scss');
-QUnit.test('no-errors.scss should pass stylelint', function(assert) {
+"QUnit.test('no-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(true, 'no-errors.scss should pass stylelint');
 });
