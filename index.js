@@ -95,7 +95,7 @@ class StyleLinter extends Filter {
                                   {name: 'testingFramework', default:'qunit'},
                                   {name: 'testFailingFiles'},
                                   {name: 'testPassingFiles'},
-                                  {name: 'testGenerator', default: require('./lib/test-generator')},
+                                  {name: 'testGenerator', default: require('./lib/suite-generator')},
                                   {name: 'linterConfig', default: {}},
                                   {name: 'log', default: true},
                                   {name: 'console', default: console}];

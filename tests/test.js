@@ -112,7 +112,7 @@ describe('Broccoli StyleLint Plugin', function() {
         it('uses new geneator if testingFramework key is present', function() {
           var options = {testingFramework:'qunit'};
           let linter = StyleLinter.create('', options);
-          expect(linter.testGenerator).toEqual(require('../lib/test-generator'));
+          expect(linter.testGenerator).toEqual(require('../lib/suite-generator'));
         });
       });
 
