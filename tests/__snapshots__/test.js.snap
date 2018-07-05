@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Broccoli StyleLint Plugin Generated Tests generates correct failing test string 1`] = `
+exports[`Broccoli StyleLint Plugin Generated Tests when grouping is false generates correct failing test string 1`] = `
 "QUnit.module('Stylelint: has-errors.scss');
 QUnit.test('has-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
@@ -9,7 +9,7 @@ QUnit.test('has-errors.scss should pass stylelint', function(assert) {
 "
 `;
 
-exports[`Broccoli StyleLint Plugin Generated Tests generates correct passing test string 1`] = `
+exports[`Broccoli StyleLint Plugin Generated Tests when grouping is false generates correct passing test string 1`] = `
 "QUnit.module('Stylelint: no-errors.scss');
 QUnit.test('no-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);

@@ -202,24 +202,27 @@ describe('Broccoli StyleLint Plugin', function() {
 
   describe('Generated Tests', function(){
 
-    it('correctly handles nested folders', co.wrap(function *() {
-      let results = yield buildAndLint('tests/fixtures/test-generation', {testFailingFiles:true});
-      return expect(walkTestsOutputTree(results)).toEqual([
-        'has-errors.stylelint-test.js',
-        'nested-dir/has-errors2.stylelint-test.js',
-        'nested-dir/no-errors.stylelint-test.js',
-      ]);
-    }));
+    describe('when grouping is false', function () {
 
-    it('generates correct failing test string', co.wrap(function *() {
-      let results = yield buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
-    }));
+      it('correctly handles nested folders', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/test-generation', {testFailingFiles:true});
+        return expect(walkTestsOutputTree(results)).toEqual([
+          'has-errors.stylelint-test.js',
+          'nested-dir/has-errors2.stylelint-test.js',
+          'nested-dir/no-errors.stylelint-test.js',
+        ]);
+      }));
 
-    it('generates correct passing test string', co.wrap(function *() {
-      let results = yield buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
-    }));
+      it('generates correct failing test string', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true});
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
+
+      it('generates correct passing test string', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true});
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
+    });
   });
 });
 
