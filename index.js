@@ -7,6 +7,7 @@ const path                = require('path');
 const broccoliNodeInfo    = require('broccoli-node-info');
 const chalk               = require('chalk');
 const FACTORY_METHOD_USED = Symbol('create() factory method was used');
+const concat = require('broccoli-concat');
 
 //Copied from stylelint, until style lint ignores files properly via node api
 function buildIgnorer(){
@@ -85,7 +86,29 @@ class StyleLinter extends Filter {
     let options = Object.assign({}, _options, {
       [FACTORY_METHOD_USED]: true
     });
-    return new this(inputNode, options);
+    if (!options.group) {
+      return new this(inputNode, options);
+    } else {
+      options.testGenerator = require('./lib/test-generator');
+      let resultTree = new this(inputNode, options);
+
+      const testGenerators   = require('aot-test-generators');
+      let testGenerator = testGenerators[resultTree.testingFramework];
+      let header = testGenerator.suiteHeader('Stylelint');
+      let footer = testGenerator.suiteFooter();
+
+      return concat(resultTree, {
+        outputFile: `/${options.group}.stylelint-test.js`,
+        header,
+        inputFiles: ['**/*.stylelint-test.js'],
+        footer,
+        sourceMapConfig: { enabled: false },
+        allowNone: true,
+      });
+    }
+
+
+
   }
 
   compileOptions(options){
