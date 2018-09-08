@@ -3,6 +3,7 @@ module.exports = {
   displayName: 'lint',
   testMatch: [
     '<rootDir>/index.js',
+    '<rootDir>/lib/*.js',
     '<rootDir>/tests/*.js',
   ]
 };
