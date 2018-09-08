@@ -50,7 +50,7 @@ If tests are generated the plugin will output a tree of test files
 var StyleLint = require('broccoli-stylelint');
 var Funnel =      require('broccoli-funnel');
 // path to files that need linting
-var node = new StyleLint('app/styles');
+var node = StyleLint.create('app/styles');
 
 // to extract tests from linter output
 new Funnel(node, {
@@ -77,6 +77,10 @@ doesn't accept `files` option
 
 A hook that allows you to do whatever you want, when an error occurs
  - errors `array of errors`
+
+`group` {boolean}
+
+Groups tests under the same suite
 
 `testGenerator(relativePath, results, testingFramework)` {function}
 
