@@ -112,7 +112,7 @@ describe('Broccoli StyleLint Plugin', function() {
         it('uses new geneator if testingFramework key is present', function() {
           var options = {testingFramework:'qunit'};
           let linter = StyleLinter.create('', options);
-          expect(linter.testGenerator).toEqual(require('../lib/test-generator'));
+          expect(linter.testGenerator).toEqual(require('../lib/suite-generator'));
         });
       });
 
@@ -202,24 +202,46 @@ describe('Broccoli StyleLint Plugin', function() {
 
   describe('Generated Tests', function(){
 
-    it('correctly handles nested folders', co.wrap(function *() {
-      let results = yield buildAndLint('tests/fixtures/test-generation', {testFailingFiles:true});
-      return expect(walkTestsOutputTree(results)).toEqual([
-        'has-errors.stylelint-test.js',
-        'nested-dir/has-errors2.stylelint-test.js',
-        'nested-dir/no-errors.stylelint-test.js',
-      ]);
-    }));
+    describe('when grouping is true', function() {
+      it('correctly handles nested folders', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testFailingFiles:true, group:'app'});
+        return expect(walkTestsOutputTree(results)).toEqual([
+          'app.stylelint-test.js'
+        ]);
+      }));
 
-    it('generates correct failing test string', co.wrap(function *() {
-      let results = yield buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
-    }));
+      it('generates correct failing test string', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testFailingFiles:true, group:'app'});
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
 
-    it('generates correct passing test string', co.wrap(function *() {
-      let results = yield buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true});
-      return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
-    }));
+      it('generates correct passing test string', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testPassingFiles:true, group:'app'});
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
+    });
+
+    describe('when grouping is false', function () {
+
+      it('correctly handles nested folders', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/test-generation', {testFailingFiles:true});
+        return expect(walkTestsOutputTree(results)).toEqual([
+          'has-errors.stylelint-test.js',
+          'nested-dir/has-errors2.stylelint-test.js',
+          'nested-dir/no-errors.stylelint-test.js',
+        ]);
+      }));
+
+      it('generates correct failing test string', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/has-errors', {testFailingFiles:true});
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
+
+      it('generates correct passing test string', co.wrap(function *() {
+        let results = yield buildAndLint('tests/fixtures/no-errors', {testPassingFiles:true});
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
+    });
   });
 });
 
