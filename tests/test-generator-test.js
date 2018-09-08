@@ -1,6 +1,6 @@
 'use strict';
 const frameworks = ['qunit', 'mocha'];
-const generators = ['test-generator', 'suite-generator'];
+const generators = ['test-generator', 'single-suite-generator', 'grouped-suite-generator'];
 
 const errors = require('./fixtures/errors');
 const noErrors = require('./fixtures/no-errors');
