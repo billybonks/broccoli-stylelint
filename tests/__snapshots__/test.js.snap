@@ -53,3 +53,34 @@ QUnit.test('no-errors0.scss should pass stylelint', function(assert) {
 
 "
 `;
+
+exports[`Broccoli StyleLint Plugin Generated Tests when using multiple languages generates happy path tests for each language 1`] = `
+"QUnit.module('Stylelint');
+
+QUnit.test('style.css should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.css should pass stylelint');
+});
+
+QUnit.test('style.less should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.less should pass stylelint');
+});
+
+QUnit.test('style.sass should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.sass should pass stylelint');
+});
+
+QUnit.test('style.scss should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.scss should pass stylelint');
+});
+
+QUnit.test('style.sss should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.sss should pass stylelint');
+});
+
+"
+`;

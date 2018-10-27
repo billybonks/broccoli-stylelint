@@ -6,6 +6,7 @@ const stylelint           = require('stylelint');
 const path                = require('path');
 const broccoliNodeInfo    = require('broccoli-node-info');
 const chalk               = require('chalk');
+const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less'];
 const FACTORY_METHOD_USED = Symbol('create() factory method was used');
 const concat = require('broccoli-concat');
 
@@ -79,7 +80,11 @@ class StyleLinter extends Filter {
      }
 
     this.compileOptions(options);
-    this.setSyntax(this.linterConfig);
+    if (!this.linterConfig.syntax) {
+      this.extensions = SUPPORTED_FILE_FORMATS;
+    } else {
+      this.setSyntax(this.linterConfig);
+    }
   }
 
   static create(inputNode, _options){
@@ -151,10 +156,6 @@ class StyleLinter extends Filter {
     let syntax = config.syntax;
     let extensions = [];
     let targetExtension;
-    if(!syntax){
-      syntax = 'scss';
-      this.linterConfig.syntax = syntax;
-    }
     if(syntax === 'sugarss') {
       targetExtension = 'sss';
     } else {
@@ -215,6 +216,48 @@ class StyleLinter extends Filter {
       console.error(err.stack);
     });
   }
+
+    /**
+      * @method getDestFilePath
+      * determine whether the source file should
+      * be processed, and optionally rename the output file when processing occurs.
+      *
+      * Return `null` to pass the file through without processing. Return
+      * `relativePath` to process the file with `processString`. Return a
+      * different path to process the file with `processString` and rename it.
+      *
+      * By default, if the options passed into the `Filter` constructor contain a
+      * property `extensions`, and `targetExtension` is supplied, the first matching
+      * extension in the list is replaced with the `targetExtension` option's value.
+      *
+      * NOTE: this is the original method with one line change to make sure relativePath retains the
+      * file extension, allowing files with same name but different extension (e.g. style.css, style.scss)
+      * to be written out to the same destination file
+      * @override
+      */
+    getDestFilePath(relativePath, entry) {
+      // NOTE: relativePath may have been moved or unlinked
+      if (this.isDirectory(relativePath, entry)) {
+        return null;
+      }
+
+      if (this.extensions == null) {
+        return relativePath;
+      }
+
+      for (let i = 0, ii = this.extensions.length; i < ii; ++i) {
+        let ext = this.extensions[i];
+        if (relativePath.slice(-ext.length - 1) === '.' + ext) {
+          if (this.targetExtension != null) {
+            // modified code
+            relativePath = relativePath + '.' + this.targetExtension;
+          }
+          return relativePath;
+        }
+      }
+
+      return null;
+    }
 
   /**
     * @method postProcess
