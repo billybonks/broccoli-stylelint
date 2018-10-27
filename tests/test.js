@@ -81,11 +81,6 @@ describe('Broccoli StyleLint Plugin', function() {
         assertExtensions(extension, extension, [extension]);
       });
 
-      it('defaults to scss',function(){
-        var extension = 'scss';
-        assertExtensions(null, extension, [extension]);
-      });
-
     });
 
     describe('logging', function() {
@@ -180,28 +175,36 @@ describe('Broccoli StyleLint Plugin', function() {
 
       describe('Property testPassingFiles', function(){
        it('doesnt generate tests for failing files', function(){
-         return buildAndAssertFile({testPassingFiles: true}, 'nested-dir/has-errors2.stylelint-test.js', true);
+         return buildAndAssertFile({testPassingFiles: true}, 'nested-dir/has-errors2.scss.stylelint-test.js', true);
        });
 
        it('generates tests for passing files', function(){
-         return buildAndAssertFile({testPassingFiles: true}, 'nested-dir/no-errors.stylelint-test.js', false);
+         return buildAndAssertFile({testPassingFiles: true}, 'nested-dir/no-errors.scss.stylelint-test.js', false);
        });
       });
 
       describe('Property testFailingFiles', function(){
        it('doesnt generate tests for passing files', function(){
-         return buildAndAssertFile({testFailingFiles: true}, 'nested-dir/has-errors2.stylelint-test.js', false);
+         return buildAndAssertFile({testFailingFiles: true}, 'nested-dir/has-errors2.scss.stylelint-test.js', false);
        });
 
        it('generates tests for failing files', function(){
-         return buildAndAssertFile({testFailingFiles: true}, 'nested-dir/no-errors.stylelint-test.js', true);
+         return buildAndAssertFile({testFailingFiles: true}, 'nested-dir/no-errors.scss.stylelint-test.js', true);
        });
       });
     });
   });
 
   describe('Generated Tests', function(){
-
+    describe('when using multiple languages', function(){
+      it('generates happy path tests for each language',  co.wrap(function *(){
+        let results = yield buildAndLint('tests/fixtures/multi-language/happy-path', {
+          linterConfig: { formatter: 'string' },
+          group:'app'
+        });
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
+    });
     describe('when grouping is true', function() {
       it('correctly handles nested folders', co.wrap(function *() {
         let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testFailingFiles:true, group:'app'});
@@ -226,9 +229,9 @@ describe('Broccoli StyleLint Plugin', function() {
       it('correctly handles nested folders', co.wrap(function *() {
         let results = yield buildAndLint('tests/fixtures/test-generation', {testFailingFiles:true});
         return expect(walkTestsOutputTree(results)).toEqual([
-          'has-errors.stylelint-test.js',
-          'nested-dir/has-errors2.stylelint-test.js',
-          'nested-dir/no-errors.stylelint-test.js',
+          'has-errors.scss.stylelint-test.js',
+          'nested-dir/has-errors2.scss.stylelint-test.js',
+          'nested-dir/no-errors.scss.stylelint-test.js',
         ]);
       }));
 
