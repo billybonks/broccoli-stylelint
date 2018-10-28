@@ -73,6 +73,8 @@ Hash as specified by [stylelint](https://github.com/stylelint/stylelint/blob/mas
 
 doesn't accept `files` option
 
+All stylelint supported languages except `jsx` are valid targets by default. Alternatively, a `syntax` option can be passed in to scope targets to one language.
+
 `onError(errors)` {function}
 
 A hook that allows you to do whatever you want, when an error occurs
