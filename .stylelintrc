@@ -5,6 +5,7 @@
     "declaration-colon-space-after": "always",
     "max-empty-lines": 2,
     "unit-whitelist": ["em", "rem", "%", "s"],
-    "color-named": "always-where-possible"
+    "color-named": "always-where-possible",
+    "property-no-unknown": true
   }
 }
