@@ -54,6 +54,37 @@ QUnit.test('no-errors0.scss should pass stylelint', function(assert) {
 "
 `;
 
+exports[`Broccoli StyleLint Plugin Generated Tests when using multiple languages generates error path tests for each language 1`] = `
+"QUnit.module('Stylelint');
+
+QUnit.test('style.css should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n6:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
+});
+
+QUnit.test('style.less should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n14:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n14:3 Unexpected unknown property \\\\\\\\\\"marign\\\\\\\\\\" (property-no-unknown)');
+});
+
+QUnit.test('style.sass should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '7:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n6:3 Unexpected unknown property \\\\\\\\\\"witdh\\\\\\\\\\" (property-no-unknown)');
+});
+
+QUnit.test('style.scss should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '7:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
+});
+
+QUnit.test('style.sss should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '6:15 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n8:3 Unexpected unknown property \\\\\\\\\\"colr\\\\\\\\\\" (property-no-unknown)');
+});
+
+"
+`;
+
 exports[`Broccoli StyleLint Plugin Generated Tests when using multiple languages generates happy path tests for each language 1`] = `
 "QUnit.module('Stylelint');
 

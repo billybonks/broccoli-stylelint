@@ -204,6 +204,13 @@ describe('Broccoli StyleLint Plugin', function() {
         });
         return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
       }));
+      it('generates error path tests for each language',  co.wrap(function *(){
+        let results = yield buildAndLint('tests/fixtures/multi-language/error-path', {
+          linterConfig: { formatter: 'string' },
+          group:'app'
+        });
+        return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
+      }));
     });
     describe('when grouping is true', function() {
       it('correctly handles nested folders', co.wrap(function *() {
