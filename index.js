@@ -91,7 +91,7 @@ class StyleLinter extends Filter {
     let options = Object.assign({}, _options, {
       [FACTORY_METHOD_USED]: true
     });
-    if (!options.group) {
+    if (options.group === false) {
       return new this(inputNode, options);
     } else {
       options.testGenerator = require('./lib/test-generator');
