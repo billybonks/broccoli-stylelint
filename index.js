@@ -6,7 +6,7 @@ const stylelint           = require('stylelint');
 const path                = require('path');
 const broccoliNodeInfo    = require('broccoli-node-info');
 const chalk               = require('chalk');
-const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html'];
+const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
 const FACTORY_METHOD_USED = Symbol('create() factory method was used');
 const concat = require('broccoli-concat');
 

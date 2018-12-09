@@ -67,6 +67,11 @@ QUnit.test('style.html should pass stylelint', function(assert) {
   assert.ok(false, '3:19 Unexpected empty block (block-no-empty)\\\\n8:14 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
 });
 
+QUnit.test('style.js should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '5:1 Expected no more than 2 empty lines (max-empty-lines)\\\\n9:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n8:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
+});
+
 QUnit.test('style.less should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n14:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n14:3 Unexpected unknown property \\\\\\\\\\"marign\\\\\\\\\\" (property-no-unknown)');
@@ -101,6 +106,11 @@ QUnit.test('style.css should pass stylelint', function(assert) {
 QUnit.test('style.html should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(true, 'style.html should pass stylelint');
+});
+
+QUnit.test('style.js should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.js should pass stylelint');
 });
 
 QUnit.test('style.less should pass stylelint', function(assert) {
