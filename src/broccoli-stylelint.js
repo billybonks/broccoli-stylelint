@@ -7,7 +7,7 @@ const Filter = require('broccoli-persistent-filter');
 const stylelint = require('stylelint');
 const path = require('path');
 const chalk = require('chalk');
-
+const defaultsDeep = require('lodash.defaultsdeep');
 
 class BroccoliStyleLint extends Filter {
 
@@ -27,34 +27,24 @@ class BroccoliStyleLint extends Filter {
 
   constructor(inputNodes, options) {
     super(inputNodes, options);
+    this.internalOptions = defaultsDeep({}, options || {linterConfig:{}}, {
+      onError: null,
+      testingFramework: ['qunit'],
+      testFailingFiles: true,
+      testPassingFiles: true,
+      testGenerator: require('./suite-generator'),
+      linterConfig: {
+       formatter: 'string',
+       files: null
+      },
+      log: true,
+      console: console,
+    });
+    this.internalOptions.linterConfig.files = null;
     this.inputNodesDirectory = resolveInputDirectory(inputNodes);
     this.ignorer = IgnorerFactory.create();
     this.targetExtension = 'stylelint-test.js' ;
-    this.compileOptions(options);
-    this.extensions = getTargetExtensions(this.linterConfig.syntax);
-  }
-
-  compileOptions(options){
-        options = options || {linterConfig:{}};
-        /* Used to extract and delete options from input hash */
-        const availableOptions = [{name: 'onError'},
-                                  {name: 'testingFramework', default:'qunit'},
-                                  {name: 'testFailingFiles', default: true},
-                                  {name: 'testPassingFiles', default: true},
-                                  {name: 'testGenerator', default: require('./suite-generator')},
-                                  {name: 'linterConfig', default: {}},
-                                  {name: 'log', default: true},
-                                  {name: 'console', default: console}];
-
-        for(let i = 0; i < availableOptions.length; i++){
-          let option = availableOptions[i];
-          let name = option.name;
-          let defaultValue = option.default || this[name];
-          this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
-        }
-
-        this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
-        this.linterConfig.files = null;
+    this.extensions = getTargetExtensions(this.internalOptions.linterConfig.syntax);
   }
   /** Filter Class Overrides **/
 
@@ -74,19 +64,19 @@ class BroccoliStyleLint extends Filter {
    */
   processString(content, relativePath) {
     let self = this;
-    this.linterConfig.code = content;
-    this.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
-    if(this.ignorer.ignores(this.linterConfig.codeFilename)){
+    this.internalOptions.linterConfig.code = content;
+    this.internalOptions.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
+    if(this.ignorer.ignores(this.internalOptions.linterConfig.codeFilename)){
       return;
     }
-    return stylelint.lint(this.linterConfig).then(results => {
+    return stylelint.lint(this.internalOptions.linterConfig).then(results => {
       //sets the value to relative path otherwise it would be absolute path
       results = self.processResults(results, relativePath);
-      if(results.errored && self.testFailingFiles) {
-        results.output = self.testGenerator(relativePath, results, this.testingFramework);
+      if(results.errored && self.internalOptions.testFailingFiles) {
+        results.output = self.internalOptions.testGenerator(relativePath, results, this.internalOptions.testingFramework);
         return results;
-      } else if(!results.errored && self.testPassingFiles) {
-        results.output = self.testGenerator(relativePath, results, this.testingFramework);
+      } else if(!results.errored && self.internalOptions.testPassingFiles) {
+        results.output = self.internalOptions.testGenerator(relativePath, results, this.internalOptions.testingFramework);
         return results;
       }
       return '';
@@ -157,11 +147,11 @@ class BroccoliStyleLint extends Filter {
   postProcess(results) {
     if(results) {
       if(results.errored){
-        if(this.onError) {
-          this.onError(results);
+        if(this.internalOptions.onError) {
+          this.internalOptions.onError(results);
         }
-        if(this.log) {
-          this.console.log(results.log);
+        if(this.internalOptions.log) {
+          this.internalOptions.console.log(results.log);
         }
       }
       return results;

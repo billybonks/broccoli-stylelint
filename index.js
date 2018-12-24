@@ -10,7 +10,7 @@ module.exports = {
       let resultTree = new BroccoliStyleLint(inputNode, options);
 
       const testGenerators   = require('aot-test-generators');
-      let testGenerator = testGenerators[resultTree.testingFramework];
+      let testGenerator = testGenerators[resultTree.internalOptions.testingFramework];
       let header = testGenerator.suiteHeader('Stylelint');
       let footer = testGenerator.suiteFooter();
 
