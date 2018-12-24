@@ -1,14 +1,14 @@
 /*eslint-env es6*/
 'use strict';
-const IgnorerFactory      = require('./ignorer-factory')
+const IgnorerFactory = require('./ignorer-factory');
 const resolveInputDirectory  = require('./resolve-input-directory');
-const Filter              = require('broccoli-persistent-filter');
-const stylelint           = require('stylelint');
-const path                = require('path');
-const chalk               = require('chalk');
+const Filter = require('broccoli-persistent-filter');
+const stylelint = require('stylelint');
+const path = require('path');
+const chalk = require('chalk');
 const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
 
-class StyleLinter extends Filter {
+class BroccoliStyleLint extends Filter {
 
   /**
    * Creates a new StyleLinter instance.
@@ -226,4 +226,4 @@ class StyleLinter extends Filter {
 
 }
 
-module.exports = StyleLinter;
+module.exports = BroccoliStyleLint;
