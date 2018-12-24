@@ -1,24 +1,25 @@
 'use strict';
+const TestGeneratorFactory = require(`../src/test-generator-factory`);
 const frameworks = ['qunit', 'mocha'];
-const generators = ['test-generator', 'suite-generator'];
-
+const generators = ['suite', 'test'];
 const errors = require('./fixtures/errors');
 const noErrors = require('./fixtures/no-errors');
 
-generators.forEach(function(generator){
-  describe(generator, function() {
-    let _generator = require(`../src/${generator}`);
-    describe('errors is defined', function() {
-      frameworks.forEach(function(framework){
-        describe(framework, function() {
-          it('generates correct errored test', function(){
-            let results = _generator('has-errors.scss', errors, framework);
-            expect(results).toMatchSnapshot();
-          });
-          it('generates correct passed test', function(){
-            let results = _generator('no-errors.scss', noErrors, framework);
-            expect(results).toMatchSnapshot();
-          });
+generators.forEach(function(type){
+  describe(type, function() {
+    frameworks.forEach(function(framework){
+      describe(framework, function() {
+        let testGenerator = null;
+        beforeEach(function() {
+          testGenerator = TestGeneratorFactory.create(framework);
+        });
+        it('generates correct errored test', function(){
+          let results = testGenerator[type]('has-errors.scss', errors);
+          expect(results).toMatchSnapshot();
+        });
+        it('generates correct passed test', function(){
+          let results = testGenerator[type]('no-errors.scss', noErrors);
+          expect(results).toMatchSnapshot();
         });
       });
     });
