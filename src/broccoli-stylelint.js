@@ -1,29 +1,12 @@
 /*eslint-env es6*/
 'use strict';
 const IgnorerFactory      = require('./ignorer-factory')
+const resolveInputDirectory  = require('./resolve-input-directory');
 const Filter              = require('broccoli-persistent-filter');
 const stylelint           = require('stylelint');
 const path                = require('path');
-const broccoliNodeInfo    = require('broccoli-node-info');
 const chalk               = require('chalk');
 const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
-
-function resolveInputDirectory(inputNodes) {
-  if (typeof inputNodes === 'string') {
-    return inputNodes;
-  }
-
-  const nodeInfo = broccoliNodeInfo.getNodeInfo(inputNodes);
-  if (nodeInfo.nodeType === 'source') {
-    return nodeInfo.sourceDirectory;
-  }
-
-  if (nodeInfo.inputNodes.length > 1) {
-    throw new Error('broccoli-stylelint can only handle one:* broccoli nodes, but part of the given input pipeline is a many:* node. (broccoli-merge-trees is an example of a many:* node) Please perform many:* operations after linting.');
-  }
-
-  return resolveInputDirectory(nodeInfo.inputNodes[0]);
-}
 
 class StyleLinter extends Filter {
 
