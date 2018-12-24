@@ -48,7 +48,7 @@ describe('Broccoli StyleLint Plugin', function() {
 
       it('uses string formatter by default', function(){
         builder = StyleLinter.create('', {});
-        expect(builder.linterConfig.formatter).toEqual('string');
+        expect(builder.internalOptions.linterConfig.formatter).toEqual('string');
       });
 
     });
@@ -107,7 +107,7 @@ describe('Broccoli StyleLint Plugin', function() {
         it('uses new geneator if testingFramework key is present', function() {
           var options = {testingFramework:'qunit'};
           let linter = StyleLinter.create('', options);
-          expect(linter.testGenerator).toEqual(require('../src/suite-generator'));
+          expect(linter.internalOptions.testGenerator).toEqual(require('../src/suite-generator'));
         });
       });
 
@@ -123,18 +123,16 @@ describe('Broccoli StyleLint Plugin', function() {
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
         var tree = StyleLinter.create('', options);
-        expect(tree.linterConfig.files).toBe(null);
-
+        expect(tree.internalOptions.linterConfig.files).toBe(null);
       });
-
     });
 
     it('sets options on object', function(){
       var linterConfig = {files: null, formatter: 'string', syntax: 'scss'};
       var options = {linterConfig:linterConfig, testPassingFiles:true};
       var linter = StyleLinter.create('', options);
-      expect(linter.testPassingFiles).toBe(true);
-      expect(linter.linterConfig).toEqual(linterConfig);
+      expect(linter.internalOptions.testPassingFiles).toBe(true);
+      expect(linter.internalOptions.linterConfig).toEqual(linterConfig);
     });
 
     describe('Tests', function () {
