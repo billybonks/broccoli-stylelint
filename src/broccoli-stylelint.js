@@ -23,15 +23,14 @@ class BroccoliStyleLint extends Filter {
    * - console                (Custom console)
    * @class
    */
+
   constructor(inputNodes, options) {
-
     super(inputNodes, options);
-
-    this.options = options || {linterConfig:{}};
     this.inputNodesDirectory = resolveInputDirectory(inputNodes);
     this.ignorer = IgnorerFactory.create();
-
+    this.targetExtension = 'stylelint-test.js' ;
     this.compileOptions(options);
+
     if (!this.linterConfig.syntax) {
       this.extensions = SUPPORTED_FILE_FORMATS;
     } else {
@@ -40,6 +39,7 @@ class BroccoliStyleLint extends Filter {
   }
 
   compileOptions(options){
+        options = options || {linterConfig:{}};
         /* Used to extract and delete options from input hash */
         const availableOptions = [{name: 'onError'},
                                   {name: 'testingFramework', default:'qunit'},
@@ -56,9 +56,7 @@ class BroccoliStyleLint extends Filter {
           let defaultValue = option.default || this[name];
           this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
         }
-        if(this.testPassingFiles || this.testFailingFiles){
-          this.targetExtension = 'stylelint-test.js' ;
-        }
+
         this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
         this.linterConfig.files = null;
   }
