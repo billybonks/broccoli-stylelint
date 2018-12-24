@@ -1,36 +1,12 @@
 /*eslint-env es6*/
 'use strict';
-
+const IgnorerFactory      = require('./ignorer-factory')
 const Filter              = require('broccoli-persistent-filter');
 const stylelint           = require('stylelint');
 const path                = require('path');
 const broccoliNodeInfo    = require('broccoli-node-info');
 const chalk               = require('chalk');
 const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
-
-//Copied from stylelint, until style lint ignores files properly via node api
-function buildIgnorer(){
-  let ignore = require('ignore');
-  let fs = require('fs');
-  let DEFAULT_IGNORE_FILENAME = '.stylelintignore';
-  let FILE_NOT_FOUND_ERROR_CODE = 'ENOENT';
-  // The ignorer will be used to filter file paths after the glob is checked,
-  // before any files are actually read
-  let ignoreFilePath = DEFAULT_IGNORE_FILENAME;
-  let absoluteIgnoreFilePath = path.isAbsolute(ignoreFilePath)
-    ? ignoreFilePath
-    : path.resolve(process.cwd(), ignoreFilePath);
-  let ignoreText = '';
-  try {
-    ignoreText = fs.readFileSync(absoluteIgnoreFilePath, 'utf8');
-  } catch (readError) {
-    if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) {
-      throw readError;
-    }
-  }
-  return ignore()
-    .add(ignoreText);
-}
 
 function resolveInputDirectory(inputNodes) {
   if (typeof inputNodes === 'string') {
@@ -70,7 +46,7 @@ class StyleLinter extends Filter {
 
     this.options = options || {linterConfig:{}};
     this.inputNodesDirectory = resolveInputDirectory(inputNodes);
-    this.ignorer = buildIgnorer();
+    this.ignorer = IgnorerFactory.create();
 
     this.compileOptions(options);
     if (!this.linterConfig.syntax) {
