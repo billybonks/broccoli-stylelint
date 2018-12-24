@@ -40,7 +40,7 @@
     "aot-test-generators": "^0.1.0",
     "broccoli-concat": "^3.2.2",
     "broccoli-node-info": "~1.1.0",
-    "broccoli-persistent-filter": "^1.4.3",
+    "broccoli-persistent-filter": "^2.1.1",
     "chalk": "~2.4.1",
     "ignore": "^5.0.2",
     "js-string-escape": "~1.0.1",

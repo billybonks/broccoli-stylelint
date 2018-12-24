@@ -861,10 +861,10 @@ broccoli-node-info@~1.1.0:
   resolved "https://registry.yarnpkg.com/broccoli-node-info/-/broccoli-node-info-1.1.0.tgz#3aa2e31e07e5bdb516dd25214f7c45ba1c459412"
   integrity sha1-OqLjHgflvbUW3SUhT3xFuhxFlBI=
 
-broccoli-persistent-filter@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/broccoli-persistent-filter/-/broccoli-persistent-filter-1.4.3.tgz#3511bc52fc53740cda51621f58a28152d9911bc1"
-  integrity sha512-JwNLDvvXJlhUmr+CHcbVhCyp33NbCIAITjQZmJY9e8QzANXh3jpFWlhSFvkWghwKA8rTAKcXkW12agtiZjxr4g==
+broccoli-persistent-filter@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/broccoli-persistent-filter/-/broccoli-persistent-filter-2.1.1.tgz#7bb2b1015baedf5cf58b5b2608495f3d78f81b12"
+  integrity sha512-2VCbLJqMg/AWJ6WTmv83X13a6DD3BS7Gngc932jrg1snVqsB8LJDyJh+Hd9v1tQ/vMA+4vbWgwk4tDmI/tAZWg==
   dependencies:
     async-disk-cache "^1.2.1"
     async-promise-queue "^1.0.3"
@@ -876,7 +876,7 @@ broccoli-persistent-filter@^1.4.3:
     mkdirp "^0.5.1"
     promise-map-series "^0.2.1"
     rimraf "^2.6.1"
-    rsvp "^3.0.18"
+    rsvp "^4.7.0"
     symlink-or-copy "^1.0.1"
     walk-sync "^0.3.1"
 
@@ -5314,6 +5314,11 @@ rsvp@^3.0.14, rsvp@^3.0.17, rsvp@^3.0.18, rsvp@~3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.2.1.tgz#07cb4a5df25add9e826ebc67dcc9fd89db27d84a"
   integrity sha1-B8tKXfJa3Z6Cbrxn3Mn9idsn2Eo=
+
+rsvp@^4.7.0:
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.4.tgz#b50e6b34583f3dd89329a2f23a8a2be072845911"
+  integrity sha512-6FomvYPfs+Jy9TfXmBpBuMWNH94SgCsZmJKcanySzgNNP6LjWxBvyLTa9KaMfDDM5oxRfrKDB0r/qeRsLwnBfA==
 
 run-async@^2.2.0:
   version "2.3.0"
