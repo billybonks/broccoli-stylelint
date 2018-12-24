@@ -1,12 +1,13 @@
 /*eslint-env es6*/
 'use strict';
 const IgnorerFactory = require('./ignorer-factory');
+const getTargetExtensions = require('./get-target-extensions');
 const resolveInputDirectory  = require('./resolve-input-directory');
 const Filter = require('broccoli-persistent-filter');
 const stylelint = require('stylelint');
 const path = require('path');
 const chalk = require('chalk');
-const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
+
 
 class BroccoliStyleLint extends Filter {
 
@@ -30,12 +31,7 @@ class BroccoliStyleLint extends Filter {
     this.ignorer = IgnorerFactory.create();
     this.targetExtension = 'stylelint-test.js' ;
     this.compileOptions(options);
-
-    if (!this.linterConfig.syntax) {
-      this.extensions = SUPPORTED_FILE_FORMATS;
-    } else {
-      this.setSyntax(this.linterConfig);
-    }
+    this.extensions = getTargetExtensions(this.linterConfig.syntax);
   }
 
   compileOptions(options){
@@ -60,26 +56,6 @@ class BroccoliStyleLint extends Filter {
         this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
         this.linterConfig.files = null;
   }
-  /**
-   * Sets the, file extensions that the broccoli plugin must parse
-   * @param {string} syntax sass|css|less|sugarss
-   */
-  setSyntax(config) {
-    let syntax = config.syntax;
-    let extensions = [];
-    let targetExtension;
-    if(syntax === 'sugarss') {
-      targetExtension = 'sss';
-    } else {
-      targetExtension = syntax;
-    }
-    if(syntax === 'css'){
-      config.syntax = '';
-    }
-    extensions.push(targetExtension);
-    this.extensions = extensions;
-  }
-
   /** Filter Class Overrides **/
 
   /**
