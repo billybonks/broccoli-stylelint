@@ -114,10 +114,10 @@ describe('Broccoli StyleLint Plugin', function() {
 
       it('doesn\'t mutate options', function() {
         function generateTest() { return 'OK!'; }
-        var options = {disableTestGeneration:true, testGenerator: generateTest};
+        var options = {testPassingFiles:true, testGenerator: generateTest};
         StyleLinter.create('', options);
         expect(options.testGenerator).toBe(generateTest);
-        expect(options.disableTestGeneration).toBe(true);
+        expect(options.testPassingFiles).toBe(true);
       });
 
       it('cant set files option', function(){
@@ -131,9 +131,9 @@ describe('Broccoli StyleLint Plugin', function() {
 
     it('sets options on object', function(){
       var linterConfig = {files: null, formatter: 'string', syntax: 'scss'};
-      var options = {linterConfig:linterConfig, disableTestGeneration:true};
+      var options = {linterConfig:linterConfig, testPassingFiles:true};
       var linter = StyleLinter.create('', options);
-      expect(linter.disableTestGeneration).toBe(true);
+      expect(linter.testPassingFiles).toBe(true);
       expect(linter.linterConfig).toEqual(linterConfig);
     });
 
@@ -152,44 +152,44 @@ describe('Broccoli StyleLint Plugin', function() {
           let testPaths = walkTestsOutputReadableTree(results);
           expect(readTestFile(testPaths)).toBe(test);
         }));
-
-        it('generates no tests regardless of other test config when disableTestGeneration is true', co.wrap(function *() {
-          let results = yield buildAndLint('tests/fixtures/test-generation', {disableTestGeneration:true});
-          let result = walkTestsOutputTree(results);
-          expect(result.length).toBe(0);
-        }));
       });
 
-      let buildAndAssertFile = co.wrap(function *(options, relativePath, equal) {
+      let buildAndAssertFile = co.wrap(function *(options, relativePath) {
         let results = yield buildAndLint('tests/fixtures/test-generation', options);
-
         let path = results.directory + '/' + relativePath;
         let content = fs.readFileSync(path).toString();
-
-        if (equal) {
-          expect(content).toEqual('');
-        } else {
-          expect(content).not.toEqual('');
-        }
+        expect(content).toMatchSnapshot();
       });
 
       describe('Property testPassingFiles', function(){
-       it('doesnt generate tests for failing files', function(){
-         return buildAndAssertFile({testPassingFiles: true}, 'nested-dir/has-errors2.scss.stylelint-test.js', true);
+       it('doesnt generate tests for passing files', function(){
+         return buildAndAssertFile(
+           {testPassingFiles: false},
+           'nested-dir/no-errors.scss.stylelint-test.js'
+         );
        });
 
        it('generates tests for passing files', function(){
-         return buildAndAssertFile({testPassingFiles: true}, 'nested-dir/no-errors.scss.stylelint-test.js', false);
+         return buildAndAssertFile(
+           {testPassingFiles: true},
+           'nested-dir/no-errors.scss.stylelint-test.js'
+         );
        });
       });
 
       describe('Property testFailingFiles', function(){
-       it('doesnt generate tests for passing files', function(){
-         return buildAndAssertFile({testFailingFiles: true}, 'nested-dir/has-errors2.scss.stylelint-test.js', false);
+       it('doesnt generate tests for failing files', function(){
+         return buildAndAssertFile(
+           {testFailingFiles: false},
+           'nested-dir/has-errors2.scss.stylelint-test.js'
+         );
        });
 
        it('generates tests for failing files', function(){
-         return buildAndAssertFile({testFailingFiles: true}, 'nested-dir/no-errors.scss.stylelint-test.js', true);
+         return buildAndAssertFile(
+           {testFailingFiles: true},
+           'nested-dir/has-errors2.scss.stylelint-test.js'
+         );
        });
       });
     });
@@ -200,33 +200,35 @@ describe('Broccoli StyleLint Plugin', function() {
       it('generates happy path tests for each language',  co.wrap(function *(){
         let results = yield buildAndLint('tests/fixtures/multi-language/happy-path', {
           linterConfig: { formatter: 'string' },
-          group:'app'
+          group:'app',
+          testPassingFiles: true
         });
         return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
       }));
       it('generates error path tests for each language',  co.wrap(function *(){
         let results = yield buildAndLint('tests/fixtures/multi-language/error-path', {
           linterConfig: { formatter: 'string' },
-          group:'app'
+          group:'app',
+          testFailingFiles: true
         });
         return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
       }));
     });
     describe('when grouping is true', function() {
       it('correctly handles nested folders', co.wrap(function *() {
-        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testFailingFiles:true, group:'app'});
+        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testPassingFiles:false, group:'app'});
         return expect(walkTestsOutputTree(results)).toEqual([
           'app.stylelint-test.js'
         ]);
       }));
 
       it('generates correct failing test string', co.wrap(function *() {
-        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testFailingFiles:true, group:'app'});
+        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testPassingFiles:false, group:'app'});
         return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
       }));
 
       it('generates correct passing test string', co.wrap(function *() {
-        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testPassingFiles:true, group:'app'});
+        let results = yield buildAndLint('tests/fixtures/grouped-test-generation', {testFailingFiles:false, group:'app'});
         return expect(readTestFile(walkTestsOutputReadableTree(results))).toMatchSnapshot();
       }));
     });

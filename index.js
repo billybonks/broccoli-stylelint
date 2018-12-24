@@ -119,10 +119,9 @@ class StyleLinter extends Filter {
   compileOptions(options){
         /* Used to extract and delete options from input hash */
         const availableOptions = [{name: 'onError'},
-                                  {name: 'disableTestGeneration'},
                                   {name: 'testingFramework', default:'qunit'},
-                                  {name: 'testFailingFiles'},
-                                  {name: 'testPassingFiles'},
+                                  {name: 'testFailingFiles', default: true},
+                                  {name: 'testPassingFiles', default: true},
                                   {name: 'testGenerator', default: require('./lib/suite-generator')},
                                   {name: 'linterConfig', default: {}},
                                   {name: 'log', default: true},
@@ -134,14 +133,6 @@ class StyleLinter extends Filter {
           let defaultValue = option.default || this[name];
           this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
         }
-        if(typeof this.testFailingFiles === 'undefined' && typeof this.testPassingFiles === 'undefined' && typeof this.disableTestGeneration === 'undefined'){
-          this.testFailingFiles = true;
-          this.testPassingFiles = true;
-        }else if( typeof this.disableTestGeneration !== 'undefined' ){
-          this.testFailingFiles = typeof this.testFailingFiles === 'undefined' ? !this.disableTestGeneration : this.testFailingFiles;
-          this.testPassingFiles  = typeof this.testPassingFiles === 'undefined' ? !this.disableTestGeneration : this.testPassingFiles;
-        }
-
         if(this.testPassingFiles || this.testFailingFiles){
           this.targetExtension = 'stylelint-test.js' ;
         }
