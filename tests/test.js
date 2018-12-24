@@ -102,24 +102,6 @@ describe('Broccoli StyleLint Plugin', function() {
     });
 
     describe('StyleLint Configuration', function(){
-
-      describe('testGenerator deprecation', function(){
-        it('uses new geneator if testingFramework key is present', function() {
-          var options = {testingFramework:'qunit'};
-          let linter = StyleLinter.create('', options);
-          expect(linter.internalOptions.testGenerator).toEqual(require('../src/suite-generator'));
-        });
-      });
-
-
-      it('doesn\'t mutate options', function() {
-        function generateTest() { return 'OK!'; }
-        var options = {testPassingFiles:true, testGenerator: generateTest};
-        StyleLinter.create('', options);
-        expect(options.testGenerator).toBe(generateTest);
-        expect(options.testPassingFiles).toBe(true);
-      });
-
       it('cant set files option', function(){
         var options = {linterConfig:{files:['a','b']}};
         var tree = StyleLinter.create('', options);
@@ -140,8 +122,10 @@ describe('Broccoli StyleLint Plugin', function() {
       describe('Generate Tests', function(){
         it('accepted testGenerator property', co.wrap(function *() {
           var opt = {
-            testGenerator:function(){
-              return 'custom test';
+            testGenerators:{
+              suite:function(){
+                return 'custom test';
+              }
             }
           };
           var test = 'custom test';

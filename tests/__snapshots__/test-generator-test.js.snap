@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`suite-generator errors is defined mocha generates correct errored test 1`] = `
+exports[`suite mocha generates correct errored test 1`] = `
 "describe('Stylelint', function() {
   it('has-errors.scss should pass stylelint', function() {
     // test failed
@@ -12,7 +12,7 @@ exports[`suite-generator errors is defined mocha generates correct errored test 
 "
 `;
 
-exports[`suite-generator errors is defined mocha generates correct passed test 1`] = `
+exports[`suite mocha generates correct passed test 1`] = `
 "describe('Stylelint', function() {
   it('no-errors.scss should pass stylelint', function() {
     // test passed
@@ -21,7 +21,7 @@ exports[`suite-generator errors is defined mocha generates correct passed test 1
 "
 `;
 
-exports[`suite-generator errors is defined qunit generates correct errored test 1`] = `
+exports[`suite qunit generates correct errored test 1`] = `
 "QUnit.module('Stylelint');
 QUnit.test('has-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
@@ -30,7 +30,7 @@ QUnit.test('has-errors.scss should pass stylelint', function(assert) {
 "
 `;
 
-exports[`suite-generator errors is defined qunit generates correct passed test 1`] = `
+exports[`suite qunit generates correct passed test 1`] = `
 "QUnit.module('Stylelint');
 QUnit.test('no-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
@@ -39,7 +39,7 @@ QUnit.test('no-errors.scss should pass stylelint', function(assert) {
 "
 `;
 
-exports[`test-generator errors is defined mocha generates correct errored test 1`] = `
+exports[`test mocha generates correct errored test 1`] = `
 "  it('has-errors.scss should pass stylelint', function() {
     // test failed
     var error = new chai.AssertionError('1:15 Unexpected empty block (block-no-empty)\\\\n6:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
@@ -49,14 +49,14 @@ exports[`test-generator errors is defined mocha generates correct errored test 1
 "
 `;
 
-exports[`test-generator errors is defined mocha generates correct passed test 1`] = `
+exports[`test mocha generates correct passed test 1`] = `
 "  it('no-errors.scss should pass stylelint', function() {
     // test passed
   });
 "
 `;
 
-exports[`test-generator errors is defined qunit generates correct errored test 1`] = `
+exports[`test qunit generates correct errored test 1`] = `
 "QUnit.test('has-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n6:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
@@ -64,7 +64,7 @@ exports[`test-generator errors is defined qunit generates correct errored test 1
 "
 `;
 
-exports[`test-generator errors is defined qunit generates correct passed test 1`] = `
+exports[`test qunit generates correct passed test 1`] = `
 "QUnit.test('no-errors.scss should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(true, 'no-errors.scss should pass stylelint');

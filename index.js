@@ -1,18 +1,24 @@
 const BroccoliStyleLint = require('./src/broccoli-stylelint');
+const TestGeneratorFactory = require('./src/test-generator-factory');
 const concat = require('broccoli-concat');
 
 module.exports = {
   create (inputNode, options) {
+    let testGenerators;
+    if(!options.testGenerators){
+       testGenerators = TestGeneratorFactory.create(options.testingFramework || 'qunit');
+    } else {
+      testGenerators = options.testGenerators;
+      delete options.testGenerators;
+    }
     if (!options.group) {
+      options.testGenerator = testGenerators.suite;
       return new BroccoliStyleLint(inputNode, options);
     } else {
-      options.testGenerator = require('./src/test-generator');
+      options.testGenerator = testGenerators.test;
       let resultTree = new BroccoliStyleLint(inputNode, options);
-
-      const testGenerators   = require('aot-test-generators');
-      let testGenerator = testGenerators[resultTree.internalOptions.testingFramework];
-      let header = testGenerator.suiteHeader('Stylelint');
-      let footer = testGenerator.suiteFooter();
+      let header = testGenerators.suiteHeader('Stylelint');
+      let footer = testGenerators.suiteFooter();
 
       return concat(resultTree, {
         outputFile: `/${options.group}.stylelint-test.js`,
