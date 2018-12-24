@@ -1,55 +1,15 @@
 /*eslint-env es6*/
 'use strict';
+const IgnorerFactory = require('./ignorer-factory');
+const getTargetExtensions = require('./get-target-extensions');
+const resolveInputDirectory  = require('./resolve-input-directory');
+const Filter = require('broccoli-persistent-filter');
+const stylelint = require('stylelint');
+const path = require('path');
+const chalk = require('chalk');
 
-const Filter              = require('broccoli-persistent-filter');
-const stylelint           = require('stylelint');
-const path                = require('path');
-const broccoliNodeInfo    = require('broccoli-node-info');
-const chalk               = require('chalk');
-const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
 
-//Copied from stylelint, until style lint ignores files properly via node api
-function buildIgnorer(){
-  let ignore = require('ignore');
-  let fs = require('fs');
-  let DEFAULT_IGNORE_FILENAME = '.stylelintignore';
-  let FILE_NOT_FOUND_ERROR_CODE = 'ENOENT';
-  // The ignorer will be used to filter file paths after the glob is checked,
-  // before any files are actually read
-  let ignoreFilePath = DEFAULT_IGNORE_FILENAME;
-  let absoluteIgnoreFilePath = path.isAbsolute(ignoreFilePath)
-    ? ignoreFilePath
-    : path.resolve(process.cwd(), ignoreFilePath);
-  let ignoreText = '';
-  try {
-    ignoreText = fs.readFileSync(absoluteIgnoreFilePath, 'utf8');
-  } catch (readError) {
-    if (readError.code !== FILE_NOT_FOUND_ERROR_CODE) {
-      throw readError;
-    }
-  }
-  return ignore()
-    .add(ignoreText);
-}
-
-function resolveInputDirectory(inputNodes) {
-  if (typeof inputNodes === 'string') {
-    return inputNodes;
-  }
-
-  const nodeInfo = broccoliNodeInfo.getNodeInfo(inputNodes);
-  if (nodeInfo.nodeType === 'source') {
-    return nodeInfo.sourceDirectory;
-  }
-
-  if (nodeInfo.inputNodes.length > 1) {
-    throw new Error('broccoli-stylelint can only handle one:* broccoli nodes, but part of the given input pipeline is a many:* node. (broccoli-merge-trees is an example of a many:* node) Please perform many:* operations after linting.');
-  }
-
-  return resolveInputDirectory(nodeInfo.inputNodes[0]);
-}
-
-class StyleLinter extends Filter {
+class BroccoliStyleLint extends Filter {
 
   /**
    * Creates a new StyleLinter instance.
@@ -64,23 +24,18 @@ class StyleLinter extends Filter {
    * - console                (Custom console)
    * @class
    */
+
   constructor(inputNodes, options) {
-
     super(inputNodes, options);
-
-    this.options = options || {linterConfig:{}};
     this.inputNodesDirectory = resolveInputDirectory(inputNodes);
-    this.ignorer = buildIgnorer();
-
+    this.ignorer = IgnorerFactory.create();
+    this.targetExtension = 'stylelint-test.js' ;
     this.compileOptions(options);
-    if (!this.linterConfig.syntax) {
-      this.extensions = SUPPORTED_FILE_FORMATS;
-    } else {
-      this.setSyntax(this.linterConfig);
-    }
+    this.extensions = getTargetExtensions(this.linterConfig.syntax);
   }
 
   compileOptions(options){
+        options = options || {linterConfig:{}};
         /* Used to extract and delete options from input hash */
         const availableOptions = [{name: 'onError'},
                                   {name: 'testingFramework', default:'qunit'},
@@ -97,32 +52,10 @@ class StyleLinter extends Filter {
           let defaultValue = option.default || this[name];
           this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
         }
-        if(this.testPassingFiles || this.testFailingFiles){
-          this.targetExtension = 'stylelint-test.js' ;
-        }
+
         this.linterConfig = Object.assign({formatter: 'string'}, this.linterConfig);
         this.linterConfig.files = null;
   }
-  /**
-   * Sets the, file extensions that the broccoli plugin must parse
-   * @param {string} syntax sass|css|less|sugarss
-   */
-  setSyntax(config) {
-    let syntax = config.syntax;
-    let extensions = [];
-    let targetExtension;
-    if(syntax === 'sugarss') {
-      targetExtension = 'sss';
-    } else {
-      targetExtension = syntax;
-    }
-    if(syntax === 'css'){
-      config.syntax = '';
-    }
-    extensions.push(targetExtension);
-    this.extensions = extensions;
-  }
-
   /** Filter Class Overrides **/
 
   /**
@@ -267,4 +200,4 @@ class StyleLinter extends Filter {
 
 }
 
-module.exports = StyleLinter;
+module.exports = BroccoliStyleLint;
