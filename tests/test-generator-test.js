@@ -7,7 +7,7 @@ const noErrors = require('./fixtures/no-errors');
 
 generators.forEach(function(generator){
   describe(generator, function() {
-    let _generator = require(`../lib/${generator}`);
+    let _generator = require(`../src/${generator}`);
     describe('errors is defined', function() {
       frameworks.forEach(function(framework){
         describe(framework, function() {
