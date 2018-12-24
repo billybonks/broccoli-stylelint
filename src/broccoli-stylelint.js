@@ -29,10 +29,9 @@ class BroccoliStyleLint extends Filter {
     super(inputNodes, options);
     this.internalOptions = defaultsDeep({}, options || {linterConfig:{}}, {
       onError: null,
-      testingFramework: ['qunit'],
       testFailingFiles: true,
       testPassingFiles: true,
-      testGenerator: require('./suite-generator'),
+      testGenerator: null,
       linterConfig: {
        formatter: 'string',
        files: null
@@ -73,10 +72,10 @@ class BroccoliStyleLint extends Filter {
       //sets the value to relative path otherwise it would be absolute path
       results = self.processResults(results, relativePath);
       if(results.errored && self.internalOptions.testFailingFiles) {
-        results.output = self.internalOptions.testGenerator(relativePath, results, this.internalOptions.testingFramework);
+        results.output = self.internalOptions.testGenerator(relativePath, results);
         return results;
       } else if(!results.errored && self.internalOptions.testPassingFiles) {
-        results.output = self.internalOptions.testGenerator(relativePath, results, this.internalOptions.testingFramework);
+        results.output = self.internalOptions.testGenerator(relativePath, results);
         return results;
       }
       return '';
