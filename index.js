@@ -120,8 +120,8 @@ class StyleLinter extends Filter {
         /* Used to extract and delete options from input hash */
         const availableOptions = [{name: 'onError'},
                                   {name: 'testingFramework', default:'qunit'},
-                                  {name: 'testFailingFiles', default: false},
-                                  {name: 'testPassingFiles', default: false},
+                                  {name: 'testFailingFiles', default: true},
+                                  {name: 'testPassingFiles', default: true},
                                   {name: 'testGenerator', default: require('./lib/suite-generator')},
                                   {name: 'linterConfig', default: {}},
                                   {name: 'log', default: true},
@@ -133,7 +133,6 @@ class StyleLinter extends Filter {
           let defaultValue = option.default || this[name];
           this[name] = typeof options[name] === 'undefined' ?  defaultValue : options[name];
         }
-
         if(this.testPassingFiles || this.testFailingFiles){
           this.targetExtension = 'stylelint-test.js' ;
         }
