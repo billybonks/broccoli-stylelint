@@ -7,6 +7,9 @@
     "broccoli-plugin",
     "stylelint"
   ],
+   "engines" : {
+     "node" : ">=8.7.0"
+  },
   "main": "index.js",
   "scripts": {
     "lint": "jest --projects jest-eslint.config.js",
