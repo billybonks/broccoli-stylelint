@@ -91,17 +91,17 @@ QUnit.test('style.html should pass stylelint', function(assert) {
 
 QUnit.test('style.js should pass stylelint', function(assert) {
   assert.expect(1);
-  assert.ok(false, '5:1 Expected no more than 2 empty lines (max-empty-lines)\\\\n9:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n8:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
+  assert.ok(false, '8:10 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)\\\\n5:1 Expected no more than 2 empty lines (max-empty-lines)\\\\n9:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
 });
 
 QUnit.test('style.less should pass stylelint', function(assert) {
   assert.expect(1);
-  assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n14:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n14:3 Unexpected unknown property \\\\\\\\\\"marign\\\\\\\\\\" (property-no-unknown)');
+  assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n14:3 Unexpected unknown property \\\\\\\\\\"marign\\\\\\\\\\" (property-no-unknown)\\\\n14:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
 });
 
 QUnit.test('style.sass should pass stylelint', function(assert) {
   assert.expect(1);
-  assert.ok(false, '7:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n6:3 Unexpected unknown property \\\\\\\\\\"witdh\\\\\\\\\\" (property-no-unknown)');
+  assert.ok(false, '6:3 Unexpected unknown property \\\\\\\\\\"witdh\\\\\\\\\\" (property-no-unknown)\\\\n7:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
 });
 
 QUnit.test('style.scss should pass stylelint', function(assert) {
@@ -111,7 +111,7 @@ QUnit.test('style.scss should pass stylelint', function(assert) {
 
 QUnit.test('style.sss should pass stylelint', function(assert) {
   assert.expect(1);
-  assert.ok(false, '6:15 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)\\\\n8:3 Unexpected unknown property \\\\\\\\\\"colr\\\\\\\\\\" (property-no-unknown)');
+  assert.ok(false, '8:3 Unexpected unknown property \\\\\\\\\\"colr\\\\\\\\\\" (property-no-unknown)\\\\n6:15 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
 });
 
 "
