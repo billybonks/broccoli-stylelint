@@ -65,9 +65,17 @@ class BroccoliStyleLint extends Filter {
     let self = this;
     this.internalOptions.linterConfig.code = content;
     this.internalOptions.linterConfig.codeFilename = path.join(this.inputNodesDirectory, relativePath);
-    if(this.ignorer.ignores(this.internalOptions.linterConfig.codeFilename)){
-      return;
+
+    try {
+      if(this.ignorer.ignores(this.internalOptions.linterConfig.codeFilename)) {
+        return;
+      }
+    } catch(e) {
+      if(this.ignorer.ignores(relativePath)) {
+        return;
+      }
     }
+
     return stylelint.lint(this.internalOptions.linterConfig).then(results => {
       //sets the value to relative path otherwise it would be absolute path
       results = self.processResults(results, relativePath);
