@@ -184,6 +184,10 @@ class BroccoliStyleLint extends Filter {
     *  }
     */
   processResults(results, relativePath) {
+    if(results.results.length === 0){
+      results.source = relativePath;
+      return results;
+    }
     let resultsInner = results.results[0];
     resultsInner.errored = results.errored;
     resultsInner.source = relativePath;
