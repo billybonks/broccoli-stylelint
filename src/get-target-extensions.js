@@ -1,4 +1,4 @@
-const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js'];
+const SUPPORTED_FILE_FORMATS = ['sss','scss','sass','css','less','html','js','md'];
 
 /**
  * returns file extension based on syntax if null returns all supported formats.

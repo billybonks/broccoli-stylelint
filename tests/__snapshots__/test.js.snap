@@ -99,6 +99,11 @@ QUnit.test('style.less should pass stylelint', function(assert) {
   assert.ok(false, '1:15 Unexpected empty block (block-no-empty)\\\\n14:3 Unexpected unknown property \\\\\\\\\\"marign\\\\\\\\\\" (property-no-unknown)\\\\n14:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
 });
 
+QUnit.test('style.md should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(false, '2:17 Unexpected empty block (block-no-empty)\\\\n7:12 Expected \\\\\\\\\\"#000000\\\\\\\\\\" to be \\\\\\\\\\"black\\\\\\\\\\" (color-named)');
+});
+
 QUnit.test('style.sass should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(false, '6:3 Unexpected unknown property \\\\\\\\\\"witdh\\\\\\\\\\" (property-no-unknown)\\\\n7:11 Unexpected unit \\\\\\\\\\"px\\\\\\\\\\" (unit-whitelist)');
@@ -138,6 +143,11 @@ QUnit.test('style.js should pass stylelint', function(assert) {
 QUnit.test('style.less should pass stylelint', function(assert) {
   assert.expect(1);
   assert.ok(true, 'style.less should pass stylelint');
+});
+
+QUnit.test('style.md should pass stylelint', function(assert) {
+  assert.expect(1);
+  assert.ok(true, 'style.md should pass stylelint');
 });
 
 QUnit.test('style.sass should pass stylelint', function(assert) {
