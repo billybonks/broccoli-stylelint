@@ -855,10 +855,10 @@ braces@^3.0.1:
   dependencies:
     fill-range "^7.0.1"
 
-broccoli-concat@^3.2.2:
-  version "3.7.4"
-  resolved "https://registry.yarnpkg.com/broccoli-concat/-/broccoli-concat-3.7.4.tgz#7371e846eb7a97cb44ccff10f68582bcadcafacd"
-  integrity sha512-9gRv1tyCQuq2+48DT9DQyxRNLOuwDtHybDeYuWA3g26HFqZd0PGAOeXcLXHpKRhxzrEbU6Gm28dZ/KolMr04cQ==
+broccoli-concat@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/broccoli-concat/-/broccoli-concat-4.0.0.tgz#dc2fe95683b36ef0f9114134afa6ae06a7c430ca"
+  integrity sha512-s8sCP5A8zcomrvue15ToOIxi5CKGOtg+oIGUYdN4EdYTeD6d/mptD9v+38MigOPt+Jgc6tcLloFVZSI+9+FLEg==
   dependencies:
     broccoli-debug "^0.6.5"
     broccoli-kitchen-sink-helpers "^0.3.1"
