@@ -8,7 +8,7 @@
     "stylelint"
   ],
    "engines" : {
-     "node" : ">=8.7.0"
+     "node" : ">=10.x"
   },
   "main": "index.js",
   "scripts": {
