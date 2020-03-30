@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/billybonks/broccoli-stylelint#readme",
   "devDependencies": {
-    "broccoli": "^0.16.9",
+    "broccoli": "^3.4.0",
     "co": "^4.6.0",
     "eslint": "^6.8.0",
     "jest": "^25.2.3",
