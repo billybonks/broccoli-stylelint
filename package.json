@@ -35,7 +35,7 @@
     "co": "^4.6.0",
     "eslint": "^6.8.0",
     "jest": "^25.2.3",
-    "jest-runner-eslint": "^0.7.1",
+    "jest-runner-eslint": "^0.10.0",
     "stylelint-selector-bem-pattern": "^2.0.0",
     "walk-sync": "^2.0.2",
     "merge": "^1.2.1"
