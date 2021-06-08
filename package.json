@@ -38,7 +38,7 @@
     "jest-runner-eslint": "^0.7.1",
     "stylelint-selector-bem-pattern": "^2.0.0",
     "walk-sync": "^2.0.2",
-    "merge": "^1.2.1"
+    "merge": "^2.1.1"
   },
   "dependencies": {
     "aot-test-generators": "^0.1.0",
