@@ -1,0 +1,30 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: stylelint
+    versions:
+    - 13.10.0
+    - 13.11.0
+    - 13.12.0
+    - 13.9.0
+  - dependency-name: broccoli
+    versions:
+    - 3.5.0
+  - dependency-name: merge
+    versions:
+    - 2.1.0
+  - dependency-name: chalk
+    versions:
+    - 4.1.0
+  - dependency-name: handlebars
+    versions:
+    - 4.7.6
+  - dependency-name: broccoli-concat
+    versions:
+    - 4.2.4
